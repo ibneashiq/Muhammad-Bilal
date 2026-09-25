@@ -8,6 +8,7 @@ import {
   Github,
   Linkedin,
   Mail,
+  MessageCircle,
   Menu,
   Moon,
   Play,
@@ -17,7 +18,7 @@ import {
   Workflow,
   X,
 } from "lucide-react";
-import { FormEvent, useState } from "react";
+import { FormEvent, MouseEvent, useState } from "react";
 
 type Theme = "light" | "dark";
 
@@ -205,13 +206,37 @@ function ProjectCard({ project }: { project: (typeof projects)[number] }) {
 export default function Home({ theme, toggleTheme }: HomeProps) {
   const [menuOpen, setMenuOpen] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const [emailError, setEmailError] = useState("");
+
+  const validateEmail = (value: string) => {
+    if (!value) return "Email is required.";
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) {
+      return "Please enter a valid email address.";
+    }
+    return "";
+  };
+
+  const smoothScrollTo = (event: MouseEvent<HTMLAnchorElement>, id: string) => {
+    event.preventDefault();
+    document.getElementById(id)?.scrollIntoView({ behavior: "smooth", block: "start" });
+    closeMenu();
+  };
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    setSubmitted(true);
-    // CONTACT HANDOFF: This is a static success state for the preview. Replace
-    // it with your Formspree endpoint, Resend action, or backend request.
-    event.currentTarget.reset();
+    const form = event.currentTarget;
+    const email = form.elements.namedItem("email") as HTMLInputElement;
+    const error = validateEmail(email.value);
+    setEmailError(error);
+    if (error) {
+      event.preventDefault();
+      email.focus();
+      return;
+    }
+
+    setSubmitting(true);
+    // FORM HANDOFF: FormSubmit posts the four form fields to your inbox and
+    // redirects to its hosted confirmation page after a successful send.
   };
 
   const closeMenu = () => setMenuOpen(false);
@@ -219,7 +244,7 @@ export default function Home({ theme, toggleTheme }: HomeProps) {
   return (
     <div className="site-shell">
       <header className="site-header">
-        <a className="brand" href="#top" aria-label="Muhammad Bilal home" onClick={closeMenu}>
+        <a className="brand" href="#top" aria-label="Muhammad Bilal home" onClick={(event) => smoothScrollTo(event, "top")}>
           <span className="brand-initial">MB</span>
           <span className="brand-name">Muhammad Bilal</span>
         </a>
@@ -227,16 +252,16 @@ export default function Home({ theme, toggleTheme }: HomeProps) {
           {menuOpen ? <X size={20} /> : <Menu size={20} />}
         </button>
         <nav className={`site-nav ${menuOpen ? "is-open" : ""}`} aria-label="Main navigation">
-          <a href="#work" onClick={closeMenu}>Selected work</a>
-          <a href="#approach" onClick={closeMenu}>Approach</a>
-          <a href="#contact" onClick={closeMenu}>Contact</a>
+          <a href="#work" onClick={(event) => smoothScrollTo(event, "work")}>Selected work</a>
+          <a href="#approach" onClick={(event) => smoothScrollTo(event, "approach")}>Approach</a>
+          <a href="#contact" onClick={(event) => smoothScrollTo(event, "contact")}>Contact</a>
         </nav>
         <div className="header-actions">
           <button className="theme-toggle" type="button" onClick={toggleTheme} aria-label={`Switch to ${theme === "dark" ? "light" : "dark"} theme`}>
             {theme === "dark" ? <Sun size={17} /> : <Moon size={17} />}
             <span>{theme === "dark" ? "Light" : "Dark"}</span>
           </button>
-          <a className="header-cta" href="#contact">Let's talk <ArrowUpRight size={16} /></a>
+          <a className="header-cta" href="#contact" onClick={(event) => smoothScrollTo(event, "contact")}>Let's talk <ArrowUpRight size={16} /></a>
         </div>
       </header>
 
@@ -248,8 +273,8 @@ export default function Home({ theme, toggleTheme }: HomeProps) {
             <h1>Less busywork.<br /><em>More momentum.</em></h1>
             <p className="hero-description">I build practical automation systems, custom Office tools, and business intelligence dashboards that make complex work feel simple.</p>
             <div className="hero-actions">
-              <a className="button button-primary" href="#work">See the work <ArrowDownRight size={18} /></a>
-              <a className="text-link" href="#contact">Start a project <ArrowUpRight size={17} /></a>
+              <a className="button button-primary" href="#work" onClick={(event) => smoothScrollTo(event, "work")}>See the work <ArrowDownRight size={18} /></a>
+              <a className="text-link" href="#contact" onClick={(event) => smoothScrollTo(event, "contact")}>Start a project <ArrowUpRight size={17} /></a>
             </div>
             <div className="hero-proof"><span><Check size={15} /> Office automation</span><span><Check size={15} /> Custom software</span><span><Check size={15} /> Decision-ready BI</span></div>
           </div>
@@ -289,20 +314,21 @@ export default function Home({ theme, toggleTheme }: HomeProps) {
         </section>
 
         <section className="contact-section section-wrap" id="contact">
-          <div className="contact-intro"><span className="section-index">03 / Start a conversation</span><h2>Have a workflow<br /><em>worth fixing?</em></h2><p>Tell me what is slowing your team down. I will come back with a clear first step — no jargon, no bloated proposal.</p><div className="contact-aside"><Mail size={17} /><a href="mailto:hello@muhammadbilal.dev">hello@muhammadbilal.dev</a></div></div>
+          <div className="contact-intro"><span className="section-index">03 / Start a conversation</span><h2>Have a workflow<br /><em>worth fixing?</em></h2><p>Tell me what is slowing your team down. I will come back with a clear first step — no jargon, no bloated proposal.</p><div className="contact-aside"><Mail size={17} /><a href="mailto:ibn.e.ashiq@gmail.com">ibn.e.ashiq@gmail.com</a></div><div className="contact-aside"><MessageCircle size={17} /><a href="https://wa.me/923462116322" target="_blank" rel="noreferrer">WhatsApp: +92 346 2116322</a></div></div>
           <div className="form-card">
-            {submitted ? <div className="success-state"><span className="success-icon"><Check size={22} /></span><h3>Message received.</h3><p>Thanks for reaching out. In the live version, this is where your preferred email delivery or CRM handoff will connect.</p><button className="text-link" type="button" onClick={() => setSubmitted(false)}>Send another message <ArrowUpRight size={16} /></button></div> : <form onSubmit={handleSubmit}>
-              <div className="form-row"><label>Name<input name="name" type="text" placeholder="Your name" required /></label><label>Email<input name="email" type="email" placeholder="you@company.com" required /></label></div>
+            {submitted ? <div className="success-state"><span className="success-icon"><Check size={22} /></span><h3>Message received.</h3><p>Thanks for reaching out. In the live version, this is where your preferred email delivery or CRM handoff will connect.</p><button className="text-link" type="button" onClick={() => setSubmitted(false)}>Send another message <ArrowUpRight size={16} /></button></div> : <form action="https://formsubmit.co/ibn.e.ashiq@gmail.com" method="POST" onSubmit={handleSubmit}>
+              <input type="hidden" name="_subject" value="New portfolio project inquiry" /><input type="hidden" name="_template" value="table" /><input type="hidden" name="_captcha" value="false" />
+              <div className="form-row"><label>Name<input name="name" type="text" placeholder="Your name" required /></label><label>Email<input name="email" type="email" placeholder="you@company.com" required aria-invalid={Boolean(emailError)} onBlur={(event) => setEmailError(validateEmail(event.target.value))} onChange={(event) => setEmailError(validateEmail(event.target.value))} />{emailError && <span className="field-error" role="alert">{emailError}</span>}</label></div>
               <label>Project type<select name="projectType" defaultValue="" required><option value="" disabled>Select one</option><option>Excel / Office automation</option><option>Custom C# / .NET software</option><option>BI dashboard</option><option>Office add-in</option><option>Something else</option></select></label>
               <label>Description<textarea name="description" rows={5} placeholder="What would you like to make easier?" required /></label>
-              <button className="button button-primary form-submit" type="submit">Send project brief <ArrowUpRight size={18} /></button>
+              <button className="button button-primary form-submit" type="submit" disabled={submitting}>{submitting ? <><span className="submit-spinner" aria-hidden="true" /> Sending…</> : <>Send project brief <ArrowUpRight size={18} /></>}</button>
               <p className="form-note">Four fields. One useful conversation. No budget question.</p>
             </form>}
           </div>
         </section>
       </main>
 
-      <footer className="site-footer section-wrap"><div className="footer-brand"><span className="brand-initial">MB</span><span>© 2026 Muhammad Bilal</span></div><span className="footer-note">Software that gives good work room to breathe.</span><div className="footer-links"><a href="mailto:hello@muhammadbilal.dev" aria-label="Email Muhammad Bilal"><Mail size={17} /></a><a href="https://www.linkedin.com" target="_blank" rel="noreferrer" aria-label="LinkedIn placeholder"><Linkedin size={17} /></a><a href="https://github.com" target="_blank" rel="noreferrer" aria-label="GitHub placeholder"><Github size={17} /></a><Code2 size={17} aria-hidden="true" /></div></footer>
+      <footer className="site-footer section-wrap"><div className="footer-brand"><span className="brand-initial">MB</span><span>© 2026 Muhammad Bilal</span></div><span className="footer-note">Software that gives good work room to breathe.</span><div className="footer-links"><a href="mailto:ibn.e.ashiq@gmail.com" aria-label="Email Muhammad Bilal"><Mail size={17} /></a><a href="https://www.facebook.com/ibn.ashiq/" target="_blank" rel="noreferrer" aria-label="Facebook"><span className="social-letter">f</span></a><a href="https://www.linkedin.com/in/bilalashiq/" target="_blank" rel="noreferrer" aria-label="LinkedIn"><Linkedin size={17} /></a><a href="https://wa.me/923462116322" target="_blank" rel="noreferrer" aria-label="WhatsApp"><MessageCircle size={17} /></a><Github size={17} aria-hidden="true" /></div></footer>
     </div>
   );
 }
