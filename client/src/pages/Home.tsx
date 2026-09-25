@@ -32,59 +32,59 @@ type HomeProps = {
 const projects = [
   {
     number: "01",
-    eyebrow: "Business intelligence",
-    title: "Dynamic Excel BI Dashboard",
+    eyebrow: "Excel + Word intelligence",
+    title: "Dynamic Excel & Word Document System",
     description:
-      "Turned scattered operational data into a decision-ready dashboard with refreshable KPIs, trend views, and drill-down reporting.",
-    tags: ["Excel", "Power Query", "VBA", "Data Viz"],
+      "Connected structured Excel data to polished Word outputs, replacing repetitive document preparation with a repeatable one-click workflow.",
+    tags: ["Excel", "VBA", "Word", "Mail Merge"],
     accent: "lime",
     visual: "dashboard",
     review:
-      "Muhammad turned a messy reporting process into something our team actually enjoys using. Clear, fast, and extremely well thought through.",
-    reviewer: "Operations lead · Fiverr",
+      "Outstanding experience working with MBA. Exceptional attention to detail, seamless communication, and top-notch quality.",
+    reviewer: "Fiverr client · United Kingdom",
   },
   {
     number: "02",
-    eyebrow: "Microsoft 365 extension",
-    title: "Custom C# VSTO Add-in for Word",
+    eyebrow: "Forms + productivity UI",
+    title: "Custom VBA UserForm & Task Dashboard",
     description:
-      "Removed repetitive document setup with a branded Word add-in that validates content, inserts approved blocks, and exports clean deliverables.",
-    tags: ["C#", ".NET", "VSTO", "Visual Studio"],
+      "Turned a spreadsheet into a focused operations interface with custom forms, modern controls, and clear task visibility for everyday users.",
+    tags: ["VBA", "UserForms", "Excel", "UI Design"],
     accent: "blue",
     visual: "word",
     review:
-      "The add-in saves our team hours every week. Bilal understood the workflow quickly and delivered a polished tool with great communication.",
-    reviewer: "Agency founder · Fiverr",
+      "He was professional, responsive, and accommodating. He understood my needs and created the right solution to meet them.",
+    reviewer: "Fiverr client · Canada",
   },
   {
     number: "03",
-    eyebrow: "Workflow automation",
-    title: "Automated Data Processing Macro",
+    eyebrow: "Cross-app automation",
+    title: "Outlook + Excel Contact Processing",
     description:
-      "Replaced a manual, error-prone handoff with a one-click macro that cleans files, maps fields, and prepares the next system upload.",
-    tags: ["VBA", "Excel", "Automation", "CSV"],
+      "Automated contact extraction and handoffs between Excel and Outlook so teams can move from raw lists to useful outreach data faster.",
+    tags: ["Excel", "Outlook", "VBA", "Data Cleaning"],
     accent: "orange",
     visual: "macro",
     review:
-      "Exactly what I needed: reliable automation that works for the people using it, not just a clever script. Would absolutely hire again.",
-    reviewer: "Finance manager · Fiverr",
+      "I thought my issues with using Word for Mac would be difficult, but he figured out how to make it work. He exceeded expectations.",
+    reviewer: "Fiverr client · United States",
   },
   {
     number: "04",
-    eyebrow: "Desktop productivity",
-    title: "C# Desktop Operations Console",
+    eyebrow: "Business intelligence",
+    title: "Automated Excel Dashboard & Data Viz",
     description:
-      "Built a focused .NET desktop app that gives a small team one place to run jobs, inspect exceptions, and export audit-ready results.",
-    tags: ["C#", ".NET", "WinForms", "SQL"],
+      "Built a KPI-focused Excel BI tool with one-click refresh, interactive views, pivot analysis, and support for messy CSV, JSON, and API data.",
+    tags: ["Excel", "Power Query", "Dashboards", "Data Analysis"],
     accent: "violet",
     visual: "console",
     review:
-      "A dependable application that feels much bigger than the brief. The process was smooth and the final result is already part of our daily work.",
-    reviewer: "Project manager · Fiverr",
+      "Thank you very much Muhammad.",
+    reviewer: "Upwork client · 5.0/5 review",
   },
 ];
 
-const clientMarks = ["NORTHSTAR", "PIVOT / CO", "KINETIC", "FIELDNOTE", "MERIDIAN"];
+const clientMarks = ["FIVERR · 301 REVIEWS", "UPWORK · 26 JOBS", "5+ YEARS", "UP TO 90% FASTER", "LEVEL 1 SELLER"];
 
 function LogoMark({ name }: { name: string }) {
   return (
@@ -271,22 +271,22 @@ export default function Home({ theme, toggleTheme }: HomeProps) {
             <div className="availability"><span className="pulse-dot" /> Available for freelance projects</div>
             <p className="hero-kicker">Freelance software & workflow automation developer</p>
             <h1>Less busywork.<br /><em>More momentum.</em></h1>
-            <p className="hero-description">I build practical automation systems, custom Office tools, and business intelligence dashboards that make complex work feel simple.</p>
+            <p className="hero-description">I build practical Excel, Word, Outlook, and Office automation systems that turn complex workflows into fast, understandable tools.</p>
             <div className="hero-actions">
               <a className="button button-primary" href="#work" onClick={(event) => smoothScrollTo(event, "work")}>See the work <ArrowDownRight size={18} /></a>
               <a className="text-link" href="#contact" onClick={(event) => smoothScrollTo(event, "contact")}>Start a project <ArrowUpRight size={17} /></a>
             </div>
-            <div className="hero-proof"><span><Check size={15} /> Office automation</span><span><Check size={15} /> Custom software</span><span><Check size={15} /> Decision-ready BI</span></div>
+            <div className="hero-proof"><span><Check size={15} /> 5+ years experience</span><span><Check size={15} /> 301 Fiverr reviews</span><span><Check size={15} /> Up to 90% faster workflows</span></div>
           </div>
           <AutomationGraphic />
         </section>
 
-        <section className="trusted-strip" aria-label="Trusted by placeholder client logos">
+        <section className="trusted-strip" aria-label="Freelance marketplace proof">
           <div className="section-wrap trusted-inner">
-            <span className="trusted-label">Trusted by teams that value clarity</span>
+            <span className="trusted-label">Freelance proof, not fluff</span>
             <div className="client-marks">
-              {/* LOGO SWAP ZONE: Replace these text marks with your real SVG/PNG
-                  client logos. Keep them monochrome for a restrained look. */}
+              {/* PROOF STRIP: These are verified marketplace signals from your public profiles.
+                  Replace with client logos later if you want a more traditional logo wall. */}
               {clientMarks.map((mark) => <LogoMark key={mark} name={mark} />)}
             </div>
           </div>
@@ -306,15 +306,15 @@ export default function Home({ theme, toggleTheme }: HomeProps) {
           <div className="section-wrap approach-grid">
             <div className="approach-intro"><span className="section-index">02 / The approach</span><h2>Built for the messy middle.</h2><p>Most teams do not need more software. They need the right parts of their existing work to connect.</p></div>
             <div className="approach-list">
-              <div className="approach-item"><span>01</span><div><h3>Map the friction</h3><p>We find the repetitive handoffs, hidden rework, and manual decisions slowing the team down.</p></div></div>
-              <div className="approach-item"><span>02</span><div><h3>Build the useful bit</h3><p>A focused tool or workflow that fits the existing stack instead of asking everyone to start over.</p></div></div>
-              <div className="approach-item"><span>03</span><div><h3>Leave it understandable</h3><p>Documented logic, clean interfaces, and handover-ready code your team can keep using.</p></div></div>
+              <div className="approach-item"><span>01</span><div><h3>Automate the handoffs</h3><p>Excel, Word, and Outlook workflows connect cleanly so repetitive cross-app work becomes one dependable action.</p></div></div>
+              <div className="approach-item"><span>02</span><div><h3>Make the data explain itself</h3><p>Dashboards, pivot analysis, KPI tracking, and data cleaning turn raw files into decisions people can act on.</p></div></div>
+              <div className="approach-item"><span>03</span><div><h3>Ship it ready to use</h3><p>Documented VBA, friendly forms, and practical handover notes make the finished system easy to trust and maintain.</p></div></div>
             </div>
           </div>
         </section>
 
         <section className="contact-section section-wrap" id="contact">
-          <div className="contact-intro"><span className="section-index">03 / Start a conversation</span><h2>Have a workflow<br /><em>worth fixing?</em></h2><p>Tell me what is slowing your team down. I will come back with a clear first step — no jargon, no bloated proposal.</p><div className="contact-aside"><Mail size={17} /><a href="mailto:ibn.e.ashiq@gmail.com">ibn.e.ashiq@gmail.com</a></div><div className="contact-aside"><MessageCircle size={17} /><a href="https://wa.me/923462116322" target="_blank" rel="noreferrer">WhatsApp: +92 346 2116322</a></div></div>
+          <div className="contact-intro"><span className="section-index">03 / Start a conversation</span><h2>Have a workflow<br /><em>worth fixing?</em></h2><p>Tell me what is slowing your team down. I will come back with a clear first step — no jargon, no bloated proposal.</p><div className="contact-aside"><Mail size={17} /><a href="mailto:ibn.e.ashiq@gmail.com">ibn.e.ashiq@gmail.com</a></div><div className="contact-aside"><MessageCircle size={17} /><a href="https://wa.me/923462116322" target="_blank" rel="noreferrer">WhatsApp: +92 346 2116322</a></div><div className="contact-aside profile-links"><a href="https://www.fiverr.com/sellers/ibn_e_ashiq/" target="_blank" rel="noreferrer">Fiverr profile</a><span>·</span><a href="https://www.upwork.com/freelancers/muhammadbilal88" target="_blank" rel="noreferrer">Upwork profile</a></div></div>
           <div className="form-card">
             {submitted ? <div className="success-state"><span className="success-icon"><Check size={22} /></span><h3>Message received.</h3><p>Thanks for reaching out. In the live version, this is where your preferred email delivery or CRM handoff will connect.</p><button className="text-link" type="button" onClick={() => setSubmitted(false)}>Send another message <ArrowUpRight size={16} /></button></div> : <form action="https://formsubmit.co/ibn.e.ashiq@gmail.com" method="POST" onSubmit={handleSubmit}>
               <input type="hidden" name="_subject" value="New portfolio project inquiry" /><input type="hidden" name="_template" value="table" /><input type="hidden" name="_captcha" value="false" />
@@ -328,7 +328,7 @@ export default function Home({ theme, toggleTheme }: HomeProps) {
         </section>
       </main>
 
-      <footer className="site-footer section-wrap"><div className="footer-brand"><span className="brand-initial">MB</span><span>© 2026 Muhammad Bilal</span></div><span className="footer-note">Software that gives good work room to breathe.</span><div className="footer-links"><a href="mailto:ibn.e.ashiq@gmail.com" aria-label="Email Muhammad Bilal"><Mail size={17} /></a><a href="https://www.facebook.com/ibn.ashiq/" target="_blank" rel="noreferrer" aria-label="Facebook"><span className="social-letter">f</span></a><a href="https://www.linkedin.com/in/bilalashiq/" target="_blank" rel="noreferrer" aria-label="LinkedIn"><Linkedin size={17} /></a><a href="https://wa.me/923462116322" target="_blank" rel="noreferrer" aria-label="WhatsApp"><MessageCircle size={17} /></a><Github size={17} aria-hidden="true" /></div></footer>
+      <footer className="site-footer section-wrap"><div className="footer-brand"><span className="brand-initial">MB</span><span>© 2026 Muhammad Bilal</span></div><span className="footer-note">Excel, Office, and workflow systems that give good work room to breathe.</span><div className="footer-links"><a href="mailto:ibn.e.ashiq@gmail.com" aria-label="Email Muhammad Bilal"><Mail size={17} /></a><a href="https://www.facebook.com/ibn.ashiq/" target="_blank" rel="noreferrer" aria-label="Facebook"><span className="social-letter">f</span></a><a href="https://www.linkedin.com/in/bilalashiq/" target="_blank" rel="noreferrer" aria-label="LinkedIn"><Linkedin size={17} /></a><a href="https://wa.me/923462116322" target="_blank" rel="noreferrer" aria-label="WhatsApp"><MessageCircle size={17} /></a><Github size={17} aria-hidden="true" /></div></footer>
     </div>
   );
 }
