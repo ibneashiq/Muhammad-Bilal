@@ -249,20 +249,35 @@ export default function Home({ theme, toggleTheme }: HomeProps) {
     closeMenu();
   };
 
-  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
     const form = event.currentTarget;
     const email = form.elements.namedItem("email") as HTMLInputElement;
     const error = validateEmail(email.value);
     setEmailError(error);
+    setSubmitError("");
     if (error) {
-      event.preventDefault();
       email.focus();
       return;
     }
 
     setSubmitting(true);
-    // FORM HANDOFF: FormSubmit posts the four form fields to your inbox and
-    // redirects to its hosted confirmation page after a successful send.
+    try {
+      // FORM HANDOFF: AJAX keeps the visitor on this portfolio page while
+      // FormSubmit delivers the form fields to ibn.e.ashiq@gmail.com.
+      const response = await fetch("https://formsubmit.co/ajax/ibn.e.ashiq@gmail.com", {
+        method: "POST",
+        headers: { Accept: "application/json" },
+        body: new FormData(form),
+      });
+      if (!response.ok) throw new Error("FormSubmit request failed");
+      setSubmitted(true);
+      form.reset();
+    } catch {
+      setSubmitError("The form could not send right now. Please continue on WhatsApp.");
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   const closeMenu = () => setMenuOpen(false);
@@ -296,8 +311,8 @@ export default function Home({ theme, toggleTheme }: HomeProps) {
           <div className="hero-copy">
             <div className="availability"><span className="pulse-dot" /> Available for freelance projects</div>
             <p className="hero-kicker">Freelance software & workflow automation developer</p>
-            <h1>Less busywork.<br /><em>More momentum.</em></h1>
-            <p className="hero-description">I build practical Excel, Word, Outlook, and Office automation systems that turn complex workflows into fast, understandable tools.</p>
+            <h1>Do it in<br /><em>one click.</em></h1>
+            <p className="hero-description">I turn repetitive Excel, Word, Outlook, and Office work into one-click systems that give your team time back.</p>
             <div className="hero-actions">
               <a className="button button-primary whatsapp-button" href="https://wa.me/923462116322" target="_blank" rel="noreferrer"><MessageCircle size={18} /> Start a project</a>
               <a className="text-link" href="#work" onClick={(event) => smoothScrollTo(event, "work")}>See the work <ArrowDownRight size={17} /></a>
@@ -334,9 +349,14 @@ export default function Home({ theme, toggleTheme }: HomeProps) {
         </section>
 
         <section className="contact-section section-wrap" id="contact">
-          <div className="contact-intro"><span className="section-index">04 / Start a conversation</span><h2>Have a workflow<br /><em>worth fixing?</em></h2><p>Tell me what is slowing your team down. I will come back with a clear first step — no jargon, no bloated proposal.</p><div className="contact-aside"><Mail size={17} /><a href="mailto:ibn.e.ashiq@gmail.com">ibn.e.ashiq@gmail.com</a></div><div className="contact-aside"><MessageCircle size={17} /><a href="https://wa.me/923462116322" target="_blank" rel="noreferrer">WhatsApp: +92 346 2116322</a></div><div className="contact-aside profile-links"><a href="https://www.fiverr.com/sellers/ibn_e_ashiq/" target="_blank" rel="noreferrer">Fiverr profile</a><span>·</span><a href="https://www.upwork.com/freelancers/muhammadbilal88" target="_blank" rel="noreferrer">Upwork profile</a></div></div>
+          <div className="contact-intro"><span className="section-index">04 / Start a conversation</span><h2>Have a workflow<br /><em>worth fixing?</em></h2><p>Tell me what is slowing your team down. I will come back with a clear first step — no jargon, no bloated proposal.</p><div className="contact-channels" aria-label="Contact options">
+              <a className="contact-channel" href="mailto:ibn.e.ashiq@gmail.com"><span className="channel-logo channel-gmail"><Mail size={16} /></span><span><strong>Gmail</strong><small>ibn.e.ashiq@gmail.com</small></span></a>
+              <a className="contact-channel" href="https://wa.me/923462116322" target="_blank" rel="noreferrer"><span className="channel-logo channel-whatsapp"><MessageCircle size={16} /></span><span><strong>WhatsApp</strong><small>+92 346 2116322</small></span></a>
+              <a className="contact-channel" href="https://www.fiverr.com/sellers/ibn_e_ashiq/" target="_blank" rel="noreferrer"><span className="channel-logo channel-fiverr">F</span><span><strong>Fiverr</strong><small>301 client reviews</small></span></a>
+              <a className="contact-channel" href="https://www.upwork.com/freelancers/muhammadbilal88" target="_blank" rel="noreferrer"><span className="channel-logo channel-upwork">U</span><span><strong>Upwork</strong><small>26 completed jobs</small></span></a>
+            </div></div>
           <div className="form-card">
-            {submitted ? <div className="success-state"><span className="success-icon"><Check size={22} /></span><h3>Message received.</h3><p>Thanks for reaching out. You will be contacted shortly with possible options and a practical next step.</p><button className="text-link" type="button" onClick={() => setSubmitted(false)}>Send another message <ArrowUpRight size={16} /></button></div> : <form action="https://formsubmit.co/ibn.e.ashiq@gmail.com" method="POST" onSubmit={handleSubmit}>
+            {submitted ? <div className="success-state"><span className="success-icon"><Check size={22} /></span><h3>Message received.</h3><p>Thanks — you will be contacted shortly with possible options and a practical solution.</p><button className="text-link" type="button" onClick={() => setSubmitted(false)}>Send another message <ArrowUpRight size={16} /></button></div> : <form onSubmit={handleSubmit}>
               <input type="hidden" name="_subject" value="New portfolio project inquiry" /><input type="hidden" name="_template" value="table" /><input type="hidden" name="_captcha" value="false" />
               <div className="form-row"><label>Name<input name="name" type="text" placeholder="Your name" required /></label><label>Email<input name="email" type="email" placeholder="you@company.com" required aria-invalid={Boolean(emailError)} onBlur={(event) => setEmailError(validateEmail(event.target.value))} onChange={(event) => setEmailError(validateEmail(event.target.value))} />{emailError && <span className="field-error" role="alert">{emailError}</span>}</label></div>
               <label>Project type<select name="projectType" defaultValue="" required><option value="" disabled>Select one</option><option>Excel / Office automation</option><option>Custom C# / .NET software</option><option>BI dashboard</option><option>Office add-in</option><option>Something else</option></select></label>
