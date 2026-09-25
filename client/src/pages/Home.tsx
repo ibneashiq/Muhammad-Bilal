@@ -84,7 +84,12 @@ const projects = [
   },
 ];
 
-const clientMarks = ["FIVERR · 301 REVIEWS", "UPWORK · 26 JOBS", "5+ YEARS", "UP TO 90% FASTER", "LEVEL 1 SELLER"];
+const clientMarks = ["CLIENT LOGO / 01", "CLIENT LOGO / 02", "CLIENT LOGO / 03", "CLIENT LOGO / 04", "CLIENT LOGO / 05"];
+const reviewScreenshots = [
+  { source: "Fiverr review screenshot 01", quote: "Outstanding experience working with MBA. Exceptional attention to detail, seamless communication, and top-notch quality." },
+  { source: "Fiverr review screenshot 02", quote: "He was professional, responsive, and accommodating. He understood my needs and created the right solution." },
+  { source: "Fiverr review screenshot 03", quote: "He figured out how to make this work. He exceeded expectations." },
+];
 
 function LogoMark({ name }: { name: string }) {
   return (
@@ -178,6 +183,26 @@ function VideoPlaceholder({ visual, accent }: { visual: string; accent: string }
   );
 }
 
+function ReviewGallery() {
+  return (
+    <section className="reviews-section section-wrap" id="reviews">
+      <div className="section-heading reviews-heading">
+        <div><span className="section-index">02 / Client reviews</span><h2>Good work,<br /><em>said better.</em></h2></div>
+        <p>Real feedback from Fiverr and Upwork clients. Replace each marked panel with your own review screenshot when ready.</p>
+      </div>
+      <div className="review-gallery">
+        {reviewScreenshots.map((review) => (
+          <article className="review-card" key={review.source}>
+            {/* REVIEW SCREENSHOT SLOT: Drop a cropped Fiverr/Upwork screenshot in this area later. */}
+            <div className="review-screenshot-slot"><span>DROP SCREENSHOT HERE</span><small>{review.source}</small></div>
+            <blockquote><Quote size={18} /><p>“{review.quote}”</p></blockquote>
+          </article>
+        ))}
+      </div>
+    </section>
+  );
+}
+
 function ProjectCard({ project }: { project: (typeof projects)[number] }) {
   return (
     <article className="project-card">
@@ -208,6 +233,7 @@ export default function Home({ theme, toggleTheme }: HomeProps) {
   const [submitted, setSubmitted] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [emailError, setEmailError] = useState("");
+  const [submitError, setSubmitError] = useState("");
 
   const validateEmail = (value: string) => {
     if (!value) return "Email is required.";
@@ -253,7 +279,7 @@ export default function Home({ theme, toggleTheme }: HomeProps) {
         </button>
         <nav className={`site-nav ${menuOpen ? "is-open" : ""}`} aria-label="Main navigation">
           <a href="#work" onClick={(event) => smoothScrollTo(event, "work")}>Selected work</a>
-          <a href="#approach" onClick={(event) => smoothScrollTo(event, "approach")}>Approach</a>
+          <a href="#reviews" onClick={(event) => smoothScrollTo(event, "reviews")}>Reviews</a>
           <a href="#contact" onClick={(event) => smoothScrollTo(event, "contact")}>Contact</a>
         </nav>
         <div className="header-actions">
@@ -273,24 +299,29 @@ export default function Home({ theme, toggleTheme }: HomeProps) {
             <h1>Less busywork.<br /><em>More momentum.</em></h1>
             <p className="hero-description">I build practical Excel, Word, Outlook, and Office automation systems that turn complex workflows into fast, understandable tools.</p>
             <div className="hero-actions">
-              <a className="button button-primary" href="#work" onClick={(event) => smoothScrollTo(event, "work")}>See the work <ArrowDownRight size={18} /></a>
-              <a className="text-link" href="#contact" onClick={(event) => smoothScrollTo(event, "contact")}>Start a project <ArrowUpRight size={17} /></a>
+              <a className="button button-primary whatsapp-button" href="https://wa.me/923462116322" target="_blank" rel="noreferrer"><MessageCircle size={18} /> Start a project</a>
+              <a className="text-link" href="#work" onClick={(event) => smoothScrollTo(event, "work")}>See the work <ArrowDownRight size={17} /></a>
             </div>
             <div className="hero-proof"><span><Check size={15} /> 5+ years experience</span><span><Check size={15} /> 301 Fiverr reviews</span><span><Check size={15} /> Up to 90% faster workflows</span></div>
           </div>
-          <AutomationGraphic />
+          <div className="profile-visual">
+            <div className="profile-photo-frame"><img src="/manus-storage/ChatGPT_6c7e1dbf.png" alt="Muhammad Bilal, freelance software and workflow automation developer" /></div>
+            <div className="profile-label"><span className="pulse-dot" /> Muhammad Bilal <small>Software + workflow automation</small></div>
+            <div className="profile-stat"><strong>5+</strong><span>years<br />building<br />better workflows</span></div>
+          </div>
         </section>
 
-        <section className="trusted-strip" aria-label="Freelance marketplace proof">
+        <section className="trusted-strip clients-strip" aria-label="Featured client logo placeholders">
           <div className="section-wrap trusted-inner">
-            <span className="trusted-label">Freelance proof, not fluff</span>
+            <span className="trusted-label">Featured clients<br /><small>logos coming soon</small></span>
             <div className="client-marks">
-              {/* PROOF STRIP: These are verified marketplace signals from your public profiles.
-                  Replace with client logos later if you want a more traditional logo wall. */}
+              {/* CLIENT LOGO SLOT: Replace each text mark with a monochrome SVG or PNG logo when ready. */}
               {clientMarks.map((mark) => <LogoMark key={mark} name={mark} />)}
             </div>
           </div>
         </section>
+
+        <ReviewGallery />
 
         <section className="work-section section-wrap" id="work">
           <div className="section-heading work-heading">
@@ -302,27 +333,16 @@ export default function Home({ theme, toggleTheme }: HomeProps) {
           </div>
         </section>
 
-        <section className="approach-section" id="approach">
-          <div className="section-wrap approach-grid">
-            <div className="approach-intro"><span className="section-index">02 / The approach</span><h2>Built for the messy middle.</h2><p>Most teams do not need more software. They need the right parts of their existing work to connect.</p></div>
-            <div className="approach-list">
-              <div className="approach-item"><span>01</span><div><h3>Automate the handoffs</h3><p>Excel, Word, and Outlook workflows connect cleanly so repetitive cross-app work becomes one dependable action.</p></div></div>
-              <div className="approach-item"><span>02</span><div><h3>Make the data explain itself</h3><p>Dashboards, pivot analysis, KPI tracking, and data cleaning turn raw files into decisions people can act on.</p></div></div>
-              <div className="approach-item"><span>03</span><div><h3>Ship it ready to use</h3><p>Documented VBA, friendly forms, and practical handover notes make the finished system easy to trust and maintain.</p></div></div>
-            </div>
-          </div>
-        </section>
-
         <section className="contact-section section-wrap" id="contact">
-          <div className="contact-intro"><span className="section-index">03 / Start a conversation</span><h2>Have a workflow<br /><em>worth fixing?</em></h2><p>Tell me what is slowing your team down. I will come back with a clear first step — no jargon, no bloated proposal.</p><div className="contact-aside"><Mail size={17} /><a href="mailto:ibn.e.ashiq@gmail.com">ibn.e.ashiq@gmail.com</a></div><div className="contact-aside"><MessageCircle size={17} /><a href="https://wa.me/923462116322" target="_blank" rel="noreferrer">WhatsApp: +92 346 2116322</a></div><div className="contact-aside profile-links"><a href="https://www.fiverr.com/sellers/ibn_e_ashiq/" target="_blank" rel="noreferrer">Fiverr profile</a><span>·</span><a href="https://www.upwork.com/freelancers/muhammadbilal88" target="_blank" rel="noreferrer">Upwork profile</a></div></div>
+          <div className="contact-intro"><span className="section-index">04 / Start a conversation</span><h2>Have a workflow<br /><em>worth fixing?</em></h2><p>Tell me what is slowing your team down. I will come back with a clear first step — no jargon, no bloated proposal.</p><div className="contact-aside"><Mail size={17} /><a href="mailto:ibn.e.ashiq@gmail.com">ibn.e.ashiq@gmail.com</a></div><div className="contact-aside"><MessageCircle size={17} /><a href="https://wa.me/923462116322" target="_blank" rel="noreferrer">WhatsApp: +92 346 2116322</a></div><div className="contact-aside profile-links"><a href="https://www.fiverr.com/sellers/ibn_e_ashiq/" target="_blank" rel="noreferrer">Fiverr profile</a><span>·</span><a href="https://www.upwork.com/freelancers/muhammadbilal88" target="_blank" rel="noreferrer">Upwork profile</a></div></div>
           <div className="form-card">
-            {submitted ? <div className="success-state"><span className="success-icon"><Check size={22} /></span><h3>Message received.</h3><p>Thanks for reaching out. In the live version, this is where your preferred email delivery or CRM handoff will connect.</p><button className="text-link" type="button" onClick={() => setSubmitted(false)}>Send another message <ArrowUpRight size={16} /></button></div> : <form action="https://formsubmit.co/ibn.e.ashiq@gmail.com" method="POST" onSubmit={handleSubmit}>
+            {submitted ? <div className="success-state"><span className="success-icon"><Check size={22} /></span><h3>Message received.</h3><p>Thanks for reaching out. You will be contacted shortly with possible options and a practical next step.</p><button className="text-link" type="button" onClick={() => setSubmitted(false)}>Send another message <ArrowUpRight size={16} /></button></div> : <form action="https://formsubmit.co/ibn.e.ashiq@gmail.com" method="POST" onSubmit={handleSubmit}>
               <input type="hidden" name="_subject" value="New portfolio project inquiry" /><input type="hidden" name="_template" value="table" /><input type="hidden" name="_captcha" value="false" />
               <div className="form-row"><label>Name<input name="name" type="text" placeholder="Your name" required /></label><label>Email<input name="email" type="email" placeholder="you@company.com" required aria-invalid={Boolean(emailError)} onBlur={(event) => setEmailError(validateEmail(event.target.value))} onChange={(event) => setEmailError(validateEmail(event.target.value))} />{emailError && <span className="field-error" role="alert">{emailError}</span>}</label></div>
               <label>Project type<select name="projectType" defaultValue="" required><option value="" disabled>Select one</option><option>Excel / Office automation</option><option>Custom C# / .NET software</option><option>BI dashboard</option><option>Office add-in</option><option>Something else</option></select></label>
               <label>Description<textarea name="description" rows={5} placeholder="What would you like to make easier?" required /></label>
               <button className="button button-primary form-submit" type="submit" disabled={submitting}>{submitting ? <><span className="submit-spinner" aria-hidden="true" /> Sending…</> : <>Send project brief <ArrowUpRight size={18} /></>}</button>
-              <p className="form-note">Four fields. One useful conversation. No budget question.</p>
+              <p className="form-note">You stay on this page. Your details go directly to Muhammad.</p>{submitError && <p className="form-error" role="alert">{submitError} <a href="https://wa.me/923462116322" target="_blank" rel="noreferrer">Open WhatsApp</a></p>}
             </form>}
           </div>
         </section>
