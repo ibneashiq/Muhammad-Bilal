@@ -229,8 +229,8 @@ function ReviewGallery() {
       </div>
       <div className="review-gallery">
         {reviewScreenshots.map((review) => (
-          <article className="review-card" key={review.name} title={`Fiverr review from ${review.name}`}>
-            <div className="review-screenshot-slot"><img src={review.src} alt={`Fiverr review from ${review.name}`} /><span className="review-hover-name">{review.name}</span></div>
+          <article className="review-card" key={review.name}>
+            <div className="review-screenshot-slot"><img src={review.src} alt={`Fiverr review from ${review.name}`} /></div>
             <div className="review-caption"><Quote size={16} /><span>Fiverr review · {review.name}</span></div>
           </article>
         ))}
@@ -366,8 +366,8 @@ export default function Home({ theme, toggleTheme }: HomeProps) {
             <p className="hero-description">Helping businesses eliminate manual data entry, automate complex reports, and build professional desktop Office extensions. Over 375+ successful projects delivered worldwide.</p>
             <div className="hero-actions hero-actions-stacked">
               <a className="button button-primary" href="#contact" onClick={(event) => smoothScrollTo(event, "contact")}>Start a Project <ArrowUpRight size={18} /></a>
-              <a className="button button-secondary" href="https://upwork.com/freelancers/muhammadbilal88" target="_blank" rel="noreferrer">Hire on Upwork <ArrowUpRight size={16} /></a>
-              <a className="button button-secondary" href="https://www.fiverr.com/s/d0DyPYZ" target="_blank" rel="noreferrer">Order on Fiverr <ArrowUpRight size={16} /></a>
+              <a className="button whatsapp-button" href="https://wa.me/923462116322" target="_blank" rel="noreferrer"><MessageCircle size={17} /> WhatsApp me</a>
+              <div className="hero-marketplace-links"><a className="button button-secondary" href="https://upwork.com/freelancers/muhammadbilal88" target="_blank" rel="noreferrer">Hire on Upwork <ArrowUpRight size={16} /></a><a className="button button-secondary" href="https://www.fiverr.com/s/d0DyPYZ" target="_blank" rel="noreferrer">Order on Fiverr <ArrowUpRight size={16} /></a></div>
             </div>
             <p className="hero-proofline">Over 375+ successful projects delivered worldwide.</p>
           </div>
@@ -405,9 +405,9 @@ export default function Home({ theme, toggleTheme }: HomeProps) {
 
         <section className="contact-section section-wrap" id="contact">
           <div className="contact-intro"><span className="section-index">05 / Instant connect</span><h2>Have a workflow<br /><em>worth fixing?</em></h2><p>Share the process, tools, and timeline. I will come back with a practical route to a faster, more accurate workflow.</p><div className="quick-connect" aria-label="Quick connect options">
-              <div className="email-connect"><span className="channel-logo channel-gmail"><Mail size={16} /></span><span><strong>Business email</strong><small>ibn.e.ashiq@gmail.com</small></span><button type="button" className="copy-email" onClick={copyEmail}>{copiedEmail ? <><Check size={14} /> Copied</> : <><Clipboard size={14} /> Copy</>}</button></div>
-              <a className="contact-channel" href="https://upwork.com/freelancers/muhammadbilal88" target="_blank" rel="noreferrer"><span className="channel-logo channel-upwork">U</span><span><strong>Upwork Direct Hire</strong><small>Hire through marketplace escrow</small></span><ArrowUpRight size={15} /></a>
-              <a className="contact-channel" href="https://www.fiverr.com/s/d0DyPYZ" target="_blank" rel="noreferrer"><span className="channel-logo channel-fiverr">F</span><span><strong>Fiverr Direct Order</strong><small>Order a focused automation gig</small></span><ArrowUpRight size={15} /></a>
+              <div className="email-connect"><span className="channel-logo channel-gmail"><Mail size={16} /></span><span className="email-copy"><strong>Business email</strong><small>ibn.e.ashiq@gmail.com</small></span><a className="email-open" href="mailto:ibn.e.ashiq@gmail.com">Email <ArrowUpRight size={13} /></a><button type="button" className="copy-email" onClick={copyEmail}>{copiedEmail ? <><Check size={14} /> Copied</> : <><Clipboard size={14} /> Copy</>}</button></div>
+              <a className="contact-channel whatsapp-contact" href="https://wa.me/923462116322" target="_blank" rel="noreferrer"><span className="channel-logo channel-whatsapp"><MessageCircle size={16} /></span><span><strong>WhatsApp me</strong><small>+92 346 2116322 · fastest reply</small></span><ArrowUpRight size={15} /></a>
+              <div className="contact-marketplace-row"><a className="contact-channel" href="https://upwork.com/freelancers/muhammadbilal88" target="_blank" rel="noreferrer"><span className="channel-logo channel-upwork">U</span><span><strong>Upwork</strong><small>Direct hire</small></span><ArrowUpRight size={15} /></a><a className="contact-channel" href="https://www.fiverr.com/s/d0DyPYZ" target="_blank" rel="noreferrer"><span className="channel-logo channel-fiverr">F</span><span><strong>Fiverr</strong><small>Direct order</small></span><ArrowUpRight size={15} /></a></div>
             </div></div>
           <div className="form-card">
             {submitted ? <div className="success-state"><span className="success-icon"><Check size={22} /></span><h3>Message received.</h3><p>Thanks — you will be contacted shortly with possible options and a practical solution.</p><button className="text-link" type="button" onClick={() => setSubmitted(false)}>Send another message <ArrowUpRight size={16} /></button></div> : <form onSubmit={handleSubmit}>
