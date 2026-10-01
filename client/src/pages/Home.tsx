@@ -84,18 +84,27 @@ const projects = [
   },
 ];
 
-const clientMarks = ["CLIENT LOGO / 01", "CLIENT LOGO / 02", "CLIENT LOGO / 03", "CLIENT LOGO / 04", "CLIENT LOGO / 05"];
+const clientMarks = [
+  { name: "Lawlift GmbH", src: "/manus-storage/lawlift-gmbh_92163cdb.jpg" },
+  { name: "Pensions and Annuities Limited", src: "/manus-storage/pensions-annuities-limited_b1d81541.png" },
+  { name: "Pontal Brazil", src: "/manus-storage/pontalbrazil_1c38ade8.png" },
+  { name: "Wireless Tower Solutions", src: "/manus-storage/wireless-tower-solutions_114aec62.png" },
+];
 const reviewScreenshots = [
-  { source: "Fiverr review screenshot 01", quote: "Outstanding experience working with MBA. Exceptional attention to detail, seamless communication, and top-notch quality." },
-  { source: "Fiverr review screenshot 02", quote: "He was professional, responsive, and accommodating. He understood my needs and created the right solution." },
-  { source: "Fiverr review screenshot 03", quote: "He figured out how to make this work. He exceeded expectations." },
+  { name: "compwi", src: "/manus-storage/compwi_1e586993.png" },
+  { name: "deangwilliamson", src: "/manus-storage/deangwilliamson_7bfb41c1.png" },
+  { name: "dhunter_editor", src: "/manus-storage/dhunter_editor_ac0fb1aa.png" },
+  { name: "gordgoodfellow", src: "/manus-storage/gordgoodfellow_419c657a.png" },
+  { name: "mary00harrison", src: "/manus-storage/mary00harrison_267a4532.png" },
+  { name: "muktarali320", src: "/manus-storage/muktarali320_d9c6368f.png" },
+  { name: "weaver_nicole", src: "/manus-storage/weaver_nicole_a7d4caac.png" },
 ];
 
-function LogoMark({ name }: { name: string }) {
+function LogoMark({ logo }: { logo: (typeof clientMarks)[number] }) {
   return (
-    <div className="client-mark" aria-label={`Placeholder client logo: ${name}`}>
-      <span className="mark-dot" aria-hidden="true" />
-      <span>{name}</span>
+    <div className="client-mark" title={logo.name} aria-label={`Client logo: ${logo.name}`}>
+      <img src={logo.src} alt="" />
+      <span className="client-mark-name">{logo.name}</span>
     </div>
   );
 }
@@ -192,10 +201,9 @@ function ReviewGallery() {
       </div>
       <div className="review-gallery">
         {reviewScreenshots.map((review) => (
-          <article className="review-card" key={review.source}>
-            {/* REVIEW SCREENSHOT SLOT: Drop a cropped Fiverr/Upwork screenshot in this area later. */}
-            <div className="review-screenshot-slot"><span>DROP SCREENSHOT HERE</span><small>{review.source}</small></div>
-            <blockquote><Quote size={18} /><p>“{review.quote}”</p></blockquote>
+          <article className="review-card" key={review.name} title={`Fiverr review from ${review.name}`}>
+            <div className="review-screenshot-slot"><img src={review.src} alt={`Fiverr review from ${review.name}`} /><span className="review-hover-name">{review.name}</span></div>
+            <div className="review-caption"><Quote size={16} /><span>Fiverr review · {review.name}</span></div>
           </article>
         ))}
       </div>
@@ -314,7 +322,7 @@ export default function Home({ theme, toggleTheme }: HomeProps) {
             <h1>Do it in<br /><em>one click.</em></h1>
             <p className="hero-description">I turn repetitive Excel, Word, Outlook, and Office work into one-click systems that give your team time back.</p>
             <div className="hero-actions">
-              <a className="button button-primary whatsapp-button" href="https://wa.me/923462116322" target="_blank" rel="noreferrer"><MessageCircle size={18} /> Start a project</a>
+              <a className="button button-primary whatsapp-button" href="https://wa.me/923462116322" target="_blank" rel="noreferrer"><MessageCircle size={18} /> Let’s automate it</a>
               <a className="text-link" href="#work" onClick={(event) => smoothScrollTo(event, "work")}>See the work <ArrowDownRight size={17} /></a>
             </div>
             <div className="hero-proof"><span><Check size={15} /> 5+ years experience</span><span><Check size={15} /> 301 Fiverr reviews</span><span><Check size={15} /> Up to 90% faster workflows</span></div>
@@ -328,10 +336,10 @@ export default function Home({ theme, toggleTheme }: HomeProps) {
 
         <section className="trusted-strip clients-strip" aria-label="Featured client logo placeholders">
           <div className="section-wrap trusted-inner">
-            <span className="trusted-label">Featured clients<br /><small>logos coming soon</small></span>
+            <span className="trusted-label">Featured clients<br /><small>selected work</small></span>
             <div className="client-marks">
               {/* CLIENT LOGO SLOT: Replace each text mark with a monochrome SVG or PNG logo when ready. */}
-              {clientMarks.map((mark) => <LogoMark key={mark} name={mark} />)}
+              {clientMarks.map((logo) => <LogoMark key={logo.name} logo={logo} />)}
             </div>
           </div>
         </section>
