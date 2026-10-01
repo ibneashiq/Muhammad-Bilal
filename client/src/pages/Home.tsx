@@ -227,13 +227,21 @@ function ReviewGallery() {
         <div><span className="section-index">02 / Client reviews</span><h2>Good work,<br /><em>said better.</em></h2></div>
         <p>Real feedback from Fiverr and Upwork clients — shown as proof of how the work feels to use, not just how it is built.</p>
       </div>
-      <div className="review-gallery">
-        {reviewScreenshots.map((review) => (
-          <article className="review-card" key={review.name}>
-            <div className="review-screenshot-slot"><img src={review.src} alt={`Fiverr review from ${review.name}`} /></div>
-            <div className="review-caption"><Quote size={16} /><span>Fiverr review · {review.name}</span></div>
-          </article>
-        ))}
+      <div className="review-marquee" aria-label="Fiverr client reviews">
+        <div className="review-track">
+          {reviewScreenshots.map((review, index) => (
+            <article className="review-card" key={`${review.name}-primary-${index}`}>
+              <div className="review-screenshot-slot"><img src={review.src} alt={`Fiverr review from ${review.name}`} /></div>
+              <div className="review-caption"><Quote size={16} /><span>Fiverr review · {review.name}</span></div>
+            </article>
+          ))}
+          {reviewScreenshots.map((review, index) => (
+            <article className="review-card" key={`${review.name}-clone-${index}`} aria-hidden="true">
+              <div className="review-screenshot-slot"><img src={review.src} alt="" /></div>
+              <div className="review-caption"><Quote size={16} /><span>Fiverr review · {review.name}</span></div>
+            </article>
+          ))}
+        </div>
       </div>
     </section>
   );
@@ -383,8 +391,11 @@ export default function Home({ theme, toggleTheme }: HomeProps) {
         <section className="trusted-strip clients-strip" aria-label="Featured client logos">
           <div className="section-wrap trusted-inner">
             <span className="trusted-label">Featured clients<br /><small>selected work</small></span>
-            <div className="client-marks">
-              {clientMarks.map((logo) => <LogoMark key={logo.name} logo={logo} />)}
+            <div className="client-marquee" aria-label="Featured client companies">
+              <div className="client-marks">
+                {clientMarks.map((logo) => <LogoMark key={`${logo.name}-primary`} logo={logo} />)}
+                {clientMarks.map((logo) => <LogoMark key={`${logo.name}-clone`} logo={logo} />)}
+              </div>
             </div>
           </div>
         </section>
