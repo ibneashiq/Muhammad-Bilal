@@ -1,10 +1,13 @@
 import {
   ArrowDownRight,
+  BarChart3,
   ArrowUpRight,
   Check,
+  Clipboard,
   Code2,
   Database,
   FileSpreadsheet,
+  FileText,
   Github,
   Linkedin,
   Mail,
@@ -32,56 +35,63 @@ type HomeProps = {
 const projects = [
   {
     number: "01",
-    eyebrow: "Excel + Word intelligence",
-    title: "Dynamic Excel & Word Document System",
-    description:
-      "Connected structured Excel data to polished Word outputs, replacing repetitive document preparation with a repeatable one-click workflow.",
-    tags: ["Excel", "VBA", "Word", "Mail Merge"],
+    eyebrow: "Melbourne Geotech · Excel automation",
+    title: "Engineering Report Generation Tool",
+    description: "Manual assembly of soil and foundation data was slow and exposed the team to calculation errors.",
+    solution: "Built a customized Excel macro application with an intuitive UserForm and one-click PDF publishing.",
+    impact: "Cut report preparation from hours to under 5 minutes with 100% calculation consistency.",
+    tags: ["Excel VBA", "UserForms", "PDF Publishing", "Engineering"],
     accent: "lime",
     visual: "dashboard",
-    review:
-      "Outstanding experience working with MBA. Exceptional attention to detail, seamless communication, and top-notch quality.",
+    review: "Outstanding experience working with MBA. Exceptional attention to detail, seamless communication, and top-notch quality.",
     reviewer: "Fiverr client · United Kingdom",
   },
   {
     number: "02",
-    eyebrow: "Forms + productivity UI",
-    title: "Custom VBA UserForm & Task Dashboard",
-    description:
-      "Turned a spreadsheet into a focused operations interface with custom forms, modern controls, and clear task visibility for everyday users.",
-    tags: ["VBA", "UserForms", "Excel", "UI Design"],
+    eyebrow: "Kalpa NL · Word + Excel pipeline",
+    title: "Automated EAN Barcode Mail Merge System",
+    description: "Thousands of product packaging records required repeated manual formatting and quality checks.",
+    solution: "Programmed an automated Word–Excel mail merge pipeline supporting dynamic EAN generation.",
+    impact: "Reduced turnaround time by 80% and earned a client bonus on Upwork for exceptional execution.",
+    tags: ["Word VBA", "Excel VBA", "EAN / Barcode", "Mail Merge"],
     accent: "blue",
     visual: "word",
-    review:
-      "He was professional, responsive, and accommodating. He understood my needs and created the right solution to meet them.",
-    reviewer: "Fiverr client · Canada",
+    review: "He was professional, responsive, and accommodating. He understood my needs and created the right solution to meet them.",
+    reviewer: "Upwork client · Netherlands",
   },
   {
     number: "03",
-    eyebrow: "Cross-app automation",
-    title: "Outlook + Excel Contact Processing",
-    description:
-      "Automated contact extraction and handoffs between Excel and Outlook so teams can move from raw lists to useful outreach data faster.",
-    tags: ["Excel", "Outlook", "VBA", "Data Cleaning"],
+    eyebrow: "Scriptomat · Word add-in stabilization",
+    title: "Enterprise Word Add-In Stabilization",
+    description: "A legacy Microsoft Word add-in suffered from formatting bugs and cross-version instability.",
+    solution: "Debugged and refactored VBA code modules, optimizing the text replacement and formatting logic.",
+    impact: "Successfully deployed the update with zero regressions reported by active end-users.",
+    tags: ["Word VBA", "Debugging", "Text Processing", "Add-in QA"],
     accent: "orange",
     visual: "macro",
-    review:
-      "I thought my issues with using Word for Mac would be difficult, but he figured out how to make it work. He exceeded expectations.",
+    review: "I thought my issues with using Word for Mac would be difficult, but he figured out how to make it work. He exceeded expectations.",
     reviewer: "Fiverr client · United States",
   },
   {
     number: "04",
-    eyebrow: "Business intelligence",
-    title: "Automated Excel Dashboard & Data Viz",
-    description:
-      "Built a KPI-focused Excel BI tool with one-click refresh, interactive views, pivot analysis, and support for messy CSV, JSON, and API data.",
-    tags: ["Excel", "Power Query", "Dashboards", "Data Analysis"],
+    eyebrow: "Finance operations · reconciliation",
+    title: "Financial Automation & QuickBooks Data Pipeline",
+    description: "Repetitive data re-entry between accounting spreadsheets and ERP tools consumed valuable weekly hours.",
+    solution: "Automated a workbook pipeline with reconciliation rules, audit checks, and data validation checkpoints.",
+    impact: "Replaced 10+ hours of weekly manual bookkeeping with dependable automated validation.",
+    tags: ["Excel BI", "Power Query", "QuickBooks", "Audit Checks"],
     accent: "violet",
     visual: "console",
-    review:
-      "Thank you very much Muhammad.",
+    review: "Thank you very much Muhammad.",
     reviewer: "Upwork client · 5.0/5 review",
   },
+];
+
+const services = [
+  { number: "01", title: "Custom Excel Add-Ins & VSTO Development", description: "Bespoke desktop tools, custom ribbon tabs, UserForms, and COM extensions that operate seamlessly inside Microsoft Excel.", tags: ["VSTO", ".xlsm", "Ribbon XML", "UserForm GUI", "C# / VB.NET"], icon: "excel" },
+  { number: "02", title: "Interactive Business & Financial Dashboards", description: "Automated KPI trackers, dynamic pivot reports, and financial models built with deep accounting rigor, backed by an MBA in Finance.", tags: ["Power Query", "Financial Modeling", "KPI Dashboards", "QuickBooks"], icon: "dashboard" },
+  { number: "03", title: "MS Word & Document Assembly Automation", description: "High-speed VBA macros for batch text cleaning, complex spintax processing, transcript formatting, and barcode/EAN mail merges.", tags: ["Word VBA", "Bulk Formatting", "Mail Merge", "Regex Scripting"], icon: "word" },
+  { number: "04", title: "Acrobat Pro Fillable PDFs & Data Extraction", description: "Smart fillable forms, automated data parsing between Excel, Word, and PDF, and secure document workflows.", tags: ["Adobe Acrobat Pro", "Acrobat JavaScript", "PDF to Excel"], icon: "pdf" },
 ];
 
 const clientMarks = [
@@ -192,12 +202,30 @@ function VideoPlaceholder({ visual, accent }: { visual: string; accent: string }
   );
 }
 
+function StatsStrip() {
+  const stats = [
+    ["375+", "commercial projects delivered"],
+    ["175+", "international clients"],
+    ["100%", "job success & verified seller"],
+    ["MBA", "finance + workflow automation"],
+  ];
+  return <section className="stats-strip" aria-label="Professional results"><div className="section-wrap stats-grid">{stats.map(([value, label]) => <div className="stat-item" key={label}><strong>{value}</strong><span>{label}</span></div>)}</div></section>;
+}
+
+function ServicesSection() {
+  const icons = { excel: FileSpreadsheet, dashboard: BarChart3, word: FileText, pdf: Clipboard };
+  return <section className="services-section section-wrap" id="services">
+    <div className="section-heading"><div><span className="section-index">01 / Core services</span><h2>Office work,<br /><em>made operational.</em></h2></div><p>Specialist automation for teams that need fewer handoffs, cleaner data, and reliable output inside the tools they already use.</p></div>
+    <div className="services-grid">{services.map((service) => { const Icon = icons[service.icon as keyof typeof icons]; return <article className="service-card" key={service.number}><div className="service-top"><span className="service-number">{service.number}</span><Icon size={22} /></div><h3>{service.title}</h3><p>{service.description}</p><div className="tag-list">{service.tags.map((tag) => <span key={tag}>{tag}</span>)}</div></article>; })}</div>
+  </section>;
+}
+
 function ReviewGallery() {
   return (
     <section className="reviews-section section-wrap" id="reviews">
       <div className="section-heading reviews-heading">
         <div><span className="section-index">02 / Client reviews</span><h2>Good work,<br /><em>said better.</em></h2></div>
-        <p>Real feedback from Fiverr and Upwork clients. Replace each marked panel with your own review screenshot when ready.</p>
+        <p>Real feedback from Fiverr and Upwork clients — shown as proof of how the work feels to use, not just how it is built.</p>
       </div>
       <div className="review-gallery">
         {reviewScreenshots.map((review) => (
@@ -222,7 +250,11 @@ function ProjectCard({ project }: { project: (typeof projects)[number] }) {
       <VideoPlaceholder visual={project.visual} accent={project.accent} />
       <div className="project-copy">
         <h3>{project.title}</h3>
-        <p>{project.description}</p>
+        <div className="case-study-details">
+          <div className="case-study-detail"><span>Challenge</span><p>{project.description}</p></div>
+          <div className="case-study-detail"><span>Solution</span><p>{project.solution}</p></div>
+          <div className="case-study-detail case-study-impact"><span>Impact</span><p>{project.impact}</p></div>
+        </div>
         <div className="tag-list" aria-label="Technologies used">
           {project.tags.map((tag) => <span key={tag}>{tag}</span>)}
         </div>
@@ -242,6 +274,7 @@ export default function Home({ theme, toggleTheme }: HomeProps) {
   const [submitting, setSubmitting] = useState(false);
   const [emailError, setEmailError] = useState("");
   const [submitError, setSubmitError] = useState("");
+  const [copiedEmail, setCopiedEmail] = useState(false);
 
   const validateEmail = (value: string) => {
     if (!value) return "Email is required.";
@@ -273,7 +306,7 @@ export default function Home({ theme, toggleTheme }: HomeProps) {
     try {
       // FORM HANDOFF: AJAX keeps the visitor on this portfolio page while
       // FormSubmit delivers the form fields to ibn.e.ashiq@gmail.com.
-      const response = await fetch("https://formsubmit.co/ajax/ibn.e.ashiq@gmail.com", {
+      const response = await fetch("https://formsubmit.co/ajax/26a7b879632aba3a587ed210be5296c0", {
         method: "POST",
         headers: { Accept: "application/json" },
         body: new FormData(form),
@@ -285,6 +318,16 @@ export default function Home({ theme, toggleTheme }: HomeProps) {
       setSubmitError("The form could not send right now. Please continue on WhatsApp.");
     } finally {
       setSubmitting(false);
+    }
+  };
+
+  const copyEmail = async () => {
+    try {
+      await navigator.clipboard.writeText("ibn.e.ashiq@gmail.com");
+      setCopiedEmail(true);
+      window.setTimeout(() => setCopiedEmail(false), 1800);
+    } catch {
+      setSubmitError("Copy is unavailable here. Please email ibn.e.ashiq@gmail.com directly.");
     }
   };
 
@@ -318,38 +361,42 @@ export default function Home({ theme, toggleTheme }: HomeProps) {
         <section className="hero-section section-wrap">
           <div className="hero-copy">
             <div className="availability"><span className="pulse-dot" /> Available for freelance projects</div>
-            <p className="hero-kicker">Freelance software & workflow automation developer</p>
-            <h1>Do it in<br /><em>one click.</em></h1>
-            <p className="hero-description">I turn repetitive Excel, Word, Outlook, and Office work into one-click systems that give your team time back.</p>
-            <div className="hero-actions">
-              <a className="button button-primary whatsapp-button" href="https://wa.me/923462116322" target="_blank" rel="noreferrer"><MessageCircle size={18} /> Let’s automate it</a>
-              <a className="text-link" href="#work" onClick={(event) => smoothScrollTo(event, "work")}>See the work <ArrowDownRight size={17} /></a>
+            <p className="hero-kicker">Muhammad Bilal · Excel VBA, VSTO & Office Automation Specialist · MBA in Finance</p>
+            <h1>Custom Excel Add-Ins,<br /><em>VBA Macros & Workflow Automation</em></h1><p className="hero-subhead">Built for enterprise speed & accuracy.</p>
+            <p className="hero-description">Helping businesses eliminate manual data entry, automate complex reports, and build professional desktop Office extensions. Over 375+ successful projects delivered worldwide.</p>
+            <div className="hero-actions hero-actions-stacked">
+              <a className="button button-primary" href="#contact" onClick={(event) => smoothScrollTo(event, "contact")}>Start a Project <ArrowUpRight size={18} /></a>
+              <a className="button button-secondary" href="https://upwork.com/freelancers/muhammadbilal88" target="_blank" rel="noreferrer">Hire on Upwork <ArrowUpRight size={16} /></a>
+              <a className="button button-secondary" href="https://www.fiverr.com/s/d0DyPYZ" target="_blank" rel="noreferrer">Order on Fiverr <ArrowUpRight size={16} /></a>
             </div>
-            <div className="hero-proof"><span><Check size={15} /> 5+ years experience</span><span><Check size={15} /> 301 Fiverr reviews</span><span><Check size={15} /> Up to 90% faster workflows</span></div>
+            <p className="hero-proofline">Over 375+ successful projects delivered worldwide.</p>
           </div>
           <div className="profile-visual">
             <div className="profile-photo-frame"><img src="/manus-storage/ChatGPT_6c7e1dbf.png" alt="Muhammad Bilal, freelance software and workflow automation developer" /></div>
-            <div className="profile-label"><span className="pulse-dot" /> Muhammad Bilal <small>Software + workflow automation</small></div>
-            <div className="profile-stat"><strong>5+</strong><span>years<br />building<br />better workflows</span></div>
+            <div className="profile-label"><span className="pulse-dot" /> Muhammad Bilal <small>Excel + Office automation</small></div>
+            <div className="profile-stat"><strong>MBA</strong><span>finance<br />+ Office<br />automation</span></div>
           </div>
         </section>
 
-        <section className="trusted-strip clients-strip" aria-label="Featured client logo placeholders">
+        <StatsStrip />
+
+        <section className="trusted-strip clients-strip" aria-label="Featured client logos">
           <div className="section-wrap trusted-inner">
             <span className="trusted-label">Featured clients<br /><small>selected work</small></span>
             <div className="client-marks">
-              {/* CLIENT LOGO SLOT: Replace each text mark with a monochrome SVG or PNG logo when ready. */}
               {clientMarks.map((logo) => <LogoMark key={logo.name} logo={logo} />)}
             </div>
           </div>
         </section>
 
+        <ServicesSection />
+
         <ReviewGallery />
 
         <section className="work-section section-wrap" id="work">
           <div className="section-heading work-heading">
-            <div><span className="section-index">01 / Selected work</span><h2>Proof, not promises.</h2></div>
-            <p>Real-world automation shaped around how teams already work — with just enough craft to make it feel effortless.</p>
+            <div><span className="section-index">03 / Featured case studies</span><h2>Proof, not promises.</h2></div>
+            <p>Enterprise-minded Office automation that turns messy inputs into consistent, measurable output.</p>
           </div>
           <div className="project-grid">
             {projects.map((project) => <ProjectCard key={project.number} project={project} />)}
@@ -357,18 +404,17 @@ export default function Home({ theme, toggleTheme }: HomeProps) {
         </section>
 
         <section className="contact-section section-wrap" id="contact">
-          <div className="contact-intro"><span className="section-index">04 / Start a conversation</span><h2>Have a workflow<br /><em>worth fixing?</em></h2><p>Tell me what is slowing your team down. I will come back with a clear first step — no jargon, no bloated proposal.</p><div className="contact-channels" aria-label="Contact options">
-              <a className="contact-channel" href="mailto:ibn.e.ashiq@gmail.com"><span className="channel-logo channel-gmail"><Mail size={16} /></span><span><strong>Gmail</strong><small>ibn.e.ashiq@gmail.com</small></span></a>
-              <a className="contact-channel" href="https://wa.me/923462116322" target="_blank" rel="noreferrer"><span className="channel-logo channel-whatsapp"><MessageCircle size={16} /></span><span><strong>WhatsApp</strong><small>+92 346 2116322</small></span></a>
-              <a className="contact-channel" href="https://www.fiverr.com/sellers/ibn_e_ashiq/" target="_blank" rel="noreferrer"><span className="channel-logo channel-fiverr">F</span><span><strong>Fiverr</strong><small>301 client reviews</small></span></a>
-              <a className="contact-channel" href="https://www.upwork.com/freelancers/muhammadbilal88" target="_blank" rel="noreferrer"><span className="channel-logo channel-upwork">U</span><span><strong>Upwork</strong><small>26 completed jobs</small></span></a>
+          <div className="contact-intro"><span className="section-index">05 / Instant connect</span><h2>Have a workflow<br /><em>worth fixing?</em></h2><p>Share the process, tools, and timeline. I will come back with a practical route to a faster, more accurate workflow.</p><div className="quick-connect" aria-label="Quick connect options">
+              <div className="email-connect"><span className="channel-logo channel-gmail"><Mail size={16} /></span><span><strong>Business email</strong><small>ibn.e.ashiq@gmail.com</small></span><button type="button" className="copy-email" onClick={copyEmail}>{copiedEmail ? <><Check size={14} /> Copied</> : <><Clipboard size={14} /> Copy</>}</button></div>
+              <a className="contact-channel" href="https://upwork.com/freelancers/muhammadbilal88" target="_blank" rel="noreferrer"><span className="channel-logo channel-upwork">U</span><span><strong>Upwork Direct Hire</strong><small>Hire through marketplace escrow</small></span><ArrowUpRight size={15} /></a>
+              <a className="contact-channel" href="https://www.fiverr.com/s/d0DyPYZ" target="_blank" rel="noreferrer"><span className="channel-logo channel-fiverr">F</span><span><strong>Fiverr Direct Order</strong><small>Order a focused automation gig</small></span><ArrowUpRight size={15} /></a>
             </div></div>
           <div className="form-card">
             {submitted ? <div className="success-state"><span className="success-icon"><Check size={22} /></span><h3>Message received.</h3><p>Thanks — you will be contacted shortly with possible options and a practical solution.</p><button className="text-link" type="button" onClick={() => setSubmitted(false)}>Send another message <ArrowUpRight size={16} /></button></div> : <form onSubmit={handleSubmit}>
               <input type="hidden" name="_subject" value="New portfolio project inquiry" /><input type="hidden" name="_template" value="table" /><input type="hidden" name="_captcha" value="false" />
               <div className="form-row"><label>Name<input name="name" type="text" placeholder="Your name" required /></label><label>Email<input name="email" type="email" placeholder="you@company.com" required aria-invalid={Boolean(emailError)} onBlur={(event) => setEmailError(validateEmail(event.target.value))} onChange={(event) => setEmailError(validateEmail(event.target.value))} />{emailError && <span className="field-error" role="alert">{emailError}</span>}</label></div>
-              <label>Project type<select name="projectType" defaultValue="" required><option value="" disabled>Select one</option><option>Excel / Office automation</option><option>Custom C# / .NET software</option><option>BI dashboard</option><option>Office add-in</option><option>Something else</option></select></label>
-              <label>Description<textarea name="description" rows={5} placeholder="What would you like to make easier?" required /></label>
+              <label>Service needed<select name="serviceNeeded" defaultValue="" required><option value="" disabled>Select a service</option><option>Custom Excel / VSTO Add-in</option><option>MS Word Macro</option><option>Business Dashboard</option><option>Fillable PDF / Other</option></select></label>
+              <label>Project description & timeline<textarea name="description" rows={5} placeholder="What needs automating, and when would you like it ready?" required /></label>
               <button className="button button-primary form-submit" type="submit" disabled={submitting}>{submitting ? <><span className="submit-spinner" aria-hidden="true" /> Sending…</> : <>Send project brief <ArrowUpRight size={18} /></>}</button>
               <p className="form-note">You stay on this page. Your details go directly to Muhammad.</p>{submitError && <p className="form-error" role="alert">{submitError} <a href="https://wa.me/923462116322" target="_blank" rel="noreferrer">Open WhatsApp</a></p>}
             </form>}
