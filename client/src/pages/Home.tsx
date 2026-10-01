@@ -21,7 +21,7 @@ import {
   Workflow,
   X,
 } from "lucide-react";
-import { FormEvent, MouseEvent, useState } from "react";
+import { FormEvent, MouseEvent, useEffect, useState } from "react";
 
 type Theme = "light" | "dark";
 
@@ -220,7 +220,7 @@ function ServicesSection() {
   </section>;
 }
 
-function ReviewGallery() {
+function ReviewGallery({ onOpen }: { onOpen: (review: (typeof reviewScreenshots)[number]) => void }) {
   return (
     <section className="reviews-section section-wrap" id="reviews">
       <div className="section-heading reviews-heading">
@@ -230,13 +230,13 @@ function ReviewGallery() {
       <div className="review-marquee" aria-label="Fiverr client reviews">
         <div className="review-track">
           {reviewScreenshots.map((review, index) => (
-            <article className="review-card" key={`${review.name}-primary-${index}`}>
+            <article className="review-card" key={`${review.name}-primary-${index}`} role="button" tabIndex={0} onClick={() => onOpen(review)} onKeyDown={(event) => { if (event.key === "Enter" || event.key === " ") { event.preventDefault(); onOpen(review); } }}>
               <div className="review-screenshot-slot"><img src={review.src} alt={`Fiverr review from ${review.name}`} /></div>
               <div className="review-caption"><Quote size={16} /><span>Fiverr review · {review.name}</span></div>
             </article>
           ))}
           {reviewScreenshots.map((review, index) => (
-            <article className="review-card" key={`${review.name}-clone-${index}`} aria-hidden="true">
+            <article className="review-card" key={`${review.name}-clone-${index}`} role="presentation" tabIndex={-1} aria-hidden="true" onClick={() => onOpen(review)}>
               <div className="review-screenshot-slot"><img src={review.src} alt="" /></div>
               <div className="review-caption"><Quote size={16} /><span>Fiverr review · {review.name}</span></div>
             </article>
@@ -283,6 +283,7 @@ export default function Home({ theme, toggleTheme }: HomeProps) {
   const [emailError, setEmailError] = useState("");
   const [submitError, setSubmitError] = useState("");
   const [copiedEmail, setCopiedEmail] = useState(false);
+  const [selectedReview, setSelectedReview] = useState<(typeof reviewScreenshots)[number] | null>(null);
 
   const validateEmail = (value: string) => {
     if (!value) return "Email is required.";
@@ -340,6 +341,15 @@ export default function Home({ theme, toggleTheme }: HomeProps) {
   };
 
   const closeMenu = () => setMenuOpen(false);
+
+  useEffect(() => {
+    if (!selectedReview) return;
+    const handleKeyDown = (event: KeyboardEvent) => { if (event.key === "Escape") setSelectedReview(null); };
+    document.addEventListener("keydown", handleKeyDown);
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => { document.removeEventListener("keydown", handleKeyDown); document.body.style.overflow = previousOverflow; };
+  }, [selectedReview]);
 
   return (
     <div className="site-shell">
@@ -402,7 +412,7 @@ export default function Home({ theme, toggleTheme }: HomeProps) {
 
         <ServicesSection />
 
-        <ReviewGallery />
+        <ReviewGallery onOpen={setSelectedReview} />
 
         <section className="work-section section-wrap" id="work">
           <div className="section-heading work-heading">
@@ -432,6 +442,21 @@ export default function Home({ theme, toggleTheme }: HomeProps) {
           </div>
         </section>
       </main>
+
+      <div className="floating-actions" aria-label="Quick contact actions">
+        <a className="floating-action floating-whatsapp" href="https://wa.me/923462116322" target="_blank" rel="noreferrer"><MessageCircle size={18} /><span>WhatsApp</span></a>
+        <a className="floating-action floating-project" href="#contact" onClick={(event) => smoothScrollTo(event, "contact")}><Sparkles size={17} /><span>Start a project</span></a>
+      </div>
+
+      {selectedReview && (
+        <div className="review-lightbox" role="dialog" aria-modal="true" aria-label={`Full Fiverr review from ${selectedReview.name}`} onClick={() => setSelectedReview(null)}>
+          <div className="lightbox-panel" onClick={(event) => event.stopPropagation()}>
+            <div className="lightbox-toolbar"><span>Fiverr review · {selectedReview.name}</span><button type="button" className="lightbox-close" aria-label="Close review" onClick={() => setSelectedReview(null)}><X size={22} /></button></div>
+            <div className="lightbox-image-wrap"><img src={selectedReview.src} alt={`Full Fiverr review from ${selectedReview.name}`} /></div>
+            <p className="lightbox-hint">Click outside or press Esc to close</p>
+          </div>
+        </div>
+      )}
 
       <footer className="site-footer section-wrap"><div className="footer-brand"><span className="brand-initial">MB</span><span>© 2026 Muhammad Bilal</span></div><span className="footer-note">Excel, Office, and workflow systems that give good work room to breathe.</span><div className="footer-links"><a href="mailto:ibn.e.ashiq@gmail.com" aria-label="Email Muhammad Bilal"><Mail size={17} /></a><a href="https://www.facebook.com/ibn.ashiq/" target="_blank" rel="noreferrer" aria-label="Facebook"><span className="social-letter">f</span></a><a href="https://www.linkedin.com/in/bilalashiq/" target="_blank" rel="noreferrer" aria-label="LinkedIn"><Linkedin size={17} /></a><a href="https://wa.me/923462116322" target="_blank" rel="noreferrer" aria-label="WhatsApp"><MessageCircle size={17} /></a><Github size={17} aria-hidden="true" /></div></footer>
     </div>
