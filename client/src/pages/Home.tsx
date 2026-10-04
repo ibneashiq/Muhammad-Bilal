@@ -376,14 +376,12 @@ function ReviewGallery({ onOpen }: { onOpen: (review: ReviewScreenshot) => void 
           <div className="review-track" ref={trackRef}>
             {reviewScreenshots.map((review, index) => (
               <article className="review-card" key={`${review.name}-primary-${index}`} role="button" tabIndex={0} onClick={() => onOpen(review)} onKeyDown={(event) => { if (event.key === "Enter" || event.key === " ") { event.preventDefault(); onOpen(review); } }}>
-                <div className="review-screenshot-slot"><img src={review.src} alt={`Fiverr review from ${review.name}`} /></div>
-                <div className="review-caption"><Quote size={16} /><span>Fiverr review · {review.name}</span></div>
+                <div className="review-screenshot-slot"><img src={review.src} alt={`Client review from ${review.name}`} /></div>
               </article>
             ))}
             {reviewScreenshots.map((review, index) => (
               <article className="review-card" key={`${review.name}-clone-${index}`} role="presentation" tabIndex={-1} aria-hidden="true" onClick={() => onOpen(review)}>
                 <div className="review-screenshot-slot"><img src={review.src} alt="" /></div>
-                <div className="review-caption"><Quote size={16} /><span>Fiverr review · {review.name}</span></div>
               </article>
             ))}
           </div>

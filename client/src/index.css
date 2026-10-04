@@ -135,7 +135,6 @@ h1 em, h2 em { color: var(--muted); font-style: normal; }
 .review-card:hover .review-screenshot-slot img { transform: scale(1.045); filter: saturate(1.08); }
 .review-hover-name { position: absolute; right: 10px; bottom: 10px; left: 10px; padding: 8px 9px; border: 1px solid rgba(255,255,255,.22); border-radius: 6px; background: rgba(17,24,18,.82); color: #fff; font-family: var(--display); font-size: 10px; font-weight: 800; letter-spacing: .03em; opacity: 0; transform: translateY(6px); transition: opacity 180ms ease, transform 180ms ease; }
 .review-card:hover .review-hover-name, .review-card:focus-within .review-hover-name { opacity: 1; transform: translateY(0); }
-.review-caption { display: flex; align-items: center; gap: 7px; margin: 12px 2px 2px; color: var(--muted); font-size: 10px; font-weight: 800; letter-spacing: .04em; text-transform: uppercase; }.review-caption svg { color: var(--lime-ink); }
 .work-section { padding: 138px 0 145px; }
 .section-heading { display: flex; justify-content: space-between; align-items: end; gap: 40px; }
 .section-index { margin: 0 0 18px; color: var(--muted); }
@@ -273,7 +272,7 @@ h1 { font-size: clamp(3.15rem, 6vw, 6.1rem); margin-bottom: 18px; }
 .client-marquee:hover .client-marks { animation-play-state: paused; }
 .client-mark { flex: 0 0 190px; min-height: 92px; background: var(--surface); }
 .review-gallery { display: block; margin-top: 42px; }
-.review-track { display: flex; width: max-content; gap: 18px; animation: review-flow 68s linear infinite; padding: 8px 0 18px; }
+.review-track { display: flex; width: max-content; align-items: flex-start; gap: 18px; animation: review-flow 68s linear infinite; padding: 8px 0 18px; }
 .review-card { flex: 0 0 285px; }
 .review-card:hover { transform: translateY(-6px) scale(1.06); }
 @keyframes client-flow { from { transform: translateX(0); } to { transform: translateX(-50%); } }
@@ -335,9 +334,9 @@ h1 { font-size: clamp(3.15rem, 6vw, 6.1rem); margin-bottom: 18px; }
 .review-carousel { position: relative; }
 .review-carousel-control-prev { left: -19px; }
 .review-carousel-control-next { right: -19px; }
-.review-card { flex: 0 0 330px; }
-.review-screenshot-slot { min-height: 264px; aspect-ratio: 1.2; }
-.review-screenshot-slot img { width: 100%; height: 100%; min-height: 0; object-fit: contain; object-position: center; }
+.review-card { flex: 0 0 350px; padding: 10px; border-color: #e1e8e1; border-radius: 16px; background: linear-gradient(155deg, #fff 30%, #f7faf7 100%); box-shadow: 0 10px 28px rgba(31,48,35,.09); }
+.review-screenshot-slot { display: block; min-height: 0; aspect-ratio: auto; border-color: #e7ece7; border-radius: 10px; background: #fff; }
+.review-screenshot-slot img { display: block; width: 100%; height: auto; min-height: 0; object-fit: contain; object-position: center; }
 .review-card { cursor: zoom-in; }
 .review-card:focus-visible { outline: 3px solid var(--lime); outline-offset: 5px; }
 .review-lightbox { position: fixed; z-index: 100; inset: 0; display: grid; place-items: center; padding: 28px; background: rgba(10,14,11,.88); backdrop-filter: blur(14px); animation: lightbox-in 180ms ease-out both; }
@@ -368,8 +367,7 @@ h1 { font-size: clamp(3.15rem, 6vw, 6.1rem); margin-bottom: 18px; }
   .client-carousel-control { width: 34px; height: 34px; }
   .client-carousel-control-prev { left: -10px; }
   .client-carousel-control-next { right: -10px; }
-  .review-card { flex-basis: min(86vw, 330px); }
-  .review-screenshot-slot { min-height: 250px; }
+  .review-card { flex-basis: min(86vw, 350px); }
   .review-lightbox { padding: 10px; }
   .lightbox-panel { width: 96vw; max-height: 95vh; border-radius: 12px; }
   .lightbox-image-wrap { padding: 10px; }
