@@ -2,6 +2,10 @@ import {
   ArrowDownRight,
   BarChart3,
   ArrowUpRight,
+  BriefcaseBusiness,
+  ChevronLeft,
+  ChevronRight,
+  ChevronUp,
   Check,
   Clipboard,
   Code2,
@@ -16,14 +20,17 @@ import {
   Moon,
   Play,
   Quote,
+  Send,
+  ShoppingBag,
   Sparkles,
   Sun,
   Workflow,
   X,
 } from "lucide-react";
-import { FormEvent, MouseEvent, useEffect, useState } from "react";
+import { FormEvent, MouseEvent, useEffect, useRef, useState } from "react";
 
 type Theme = "light" | "dark";
+type CarouselDirection = "normal" | "reverse";
 
 type HomeProps = {
   theme: Theme;
@@ -94,28 +101,164 @@ const services = [
   { number: "04", title: "Acrobat Pro Fillable PDFs & Data Extraction", description: "Smart fillable forms, automated data parsing between Excel, Word, and PDF, and secure document workflows.", tags: ["Adobe Acrobat Pro", "Acrobat JavaScript", "PDF to Excel"], icon: "pdf" },
 ];
 
-const clientMarks = [
-  { name: "Lawlift GmbH", src: "/manus-storage/lawlift-gmbh_92163cdb.jpg" },
-  { name: "Pensions and Annuities Limited", src: "/manus-storage/pensions-annuities-limited_b1d81541.png" },
-  { name: "Pontal Brazil", src: "/manus-storage/pontalbrazil_1c38ade8.png" },
-  { name: "Wireless Tower Solutions", src: "/manus-storage/wireless-tower-solutions_114aec62.png" },
-];
-const reviewScreenshots = [
-  { name: "compwi", src: "/manus-storage/compwi_1e586993.png" },
-  { name: "deangwilliamson", src: "/manus-storage/deangwilliamson_7bfb41c1.png" },
-  { name: "dhunter_editor", src: "/manus-storage/dhunter_editor_ac0fb1aa.png" },
-  { name: "gordgoodfellow", src: "/manus-storage/gordgoodfellow_419c657a.png" },
-  { name: "mary00harrison", src: "/manus-storage/mary00harrison_267a4532.png" },
-  { name: "muktarali320", src: "/manus-storage/muktarali320_d9c6368f.png" },
-  { name: "weaver_nicole", src: "/manus-storage/weaver_nicole_a7d4caac.png" },
-];
+type ClientLogo = { name: string; src: string; country?: string; flag?: string };
+type ReviewScreenshot = { name: string; src: string };
 
-function LogoMark({ logo }: { logo: (typeof clientMarks)[number] }) {
+const logoAssets = import.meta.glob<string>("../assets/logos/*.{png,jpg,jpeg,webp,svg}", {
+  eager: true,
+  query: "?url",
+  import: "default",
+});
+const reviewAssets = import.meta.glob<string>("../assets/reviews/*.{png,jpg,jpeg,webp}", {
+  eager: true,
+  query: "?url",
+  import: "default",
+});
+const flagAssets = import.meta.glob<string>("../assets/flags/*.svg", {
+  eager: true,
+  query: "?url",
+  import: "default",
+});
+const flagsByCountryCode = Object.fromEntries(
+  Object.entries(flagAssets).map(([filePath, src]) => [
+    (filePath.split("/").pop() ?? "").replace(/\.svg$/i, "").toLowerCase(),
+    src,
+  ]),
+);
+
+function getAssetName(filePath: string) {
+  const fileName = filePath.split("/").pop() ?? "";
+  return fileName
+    .replace(/\.[^.]+$/, "")
+    .replace(/[-_]+/g, " ")
+    .split(" ")
+    .map((word) => word.toLowerCase() === "gmbh" ? "GmbH" : `${word[0].toUpperCase()}${word.slice(1)}`)
+    .join(" ");
+}
+
+function getLogoCountry(countryCode: string) {
+  if (!/^[a-z]{2}$/i.test(countryCode)) return undefined;
+  const code = countryCode.toLowerCase();
+  const flag = flagsByCountryCode[code];
+  if (!flag) return undefined;
+
+  const country = new Intl.DisplayNames(["en"], { type: "region" }).of(code.toUpperCase());
+  if (!country || country.toLowerCase() === code || country === "Unknown Region") return undefined;
+
+  return { country, flag };
+}
+
+const clientMarks: ClientLogo[] = Object.entries(logoAssets)
+  .map(([filePath, src]) => {
+    const slug = (filePath.split("/").pop() ?? "").replace(/\.[^.]+$/, "");
+    const [countryCode, ...companySlug] = slug.split("-");
+    const countryDetails = getLogoCountry(countryCode);
+    const name = getAssetName(countryDetails ? companySlug.join("-") : slug);
+    return { name, src, ...countryDetails };
+  })
+  .sort((a, b) => a.name.localeCompare(b.name));
+
+const reviewScreenshots: ReviewScreenshot[] = Object.entries(reviewAssets)
+  .map(([filePath, src]) => ({ name: getAssetName(filePath), src }))
+  .sort((a, b) => a.name.localeCompare(b.name));
+
+function advanceCarousel(
+  track: HTMLDivElement | null,
+  viewport: HTMLDivElement | null,
+  direction: CarouselDirection,
+  frameRef: { current: number | undefined },
+) {
+  if (!track || !viewport) return;
+
+  const animation = track.getAnimations()[0];
+  const duration = animation?.effect?.getComputedTiming().duration;
+  const cycleWidth = track.scrollWidth / 2;
+  const firstCard = track.firstElementChild as HTMLElement | null;
+
+  if (!animation || typeof duration !== "number" || !cycleWidth || !firstCard) {
+    const gap = Number.parseFloat(getComputedStyle(track).columnGap) || 0;
+    viewport.scrollBy({
+      left: (direction === "normal" ? 1 : -1) * ((firstCard?.getBoundingClientRect().width ?? 0) + gap),
+      behavior: "smooth",
+    });
+    return;
+  }
+
+  if (frameRef.current !== undefined) cancelAnimationFrame(frameRef.current);
+
+  const gap = Number.parseFloat(getComputedStyle(track).columnGap) || 0;
+  const distance = firstCard.getBoundingClientRect().width + gap;
+  const delta = duration * distance / cycleWidth;
+  let from = typeof animation.currentTime === "number" ? animation.currentTime : 0;
+  let startedAt: number | undefined;
+  const currentDirection = animation.effect?.getTiming().direction;
+
+  animation.pause();
+  if (currentDirection !== direction) {
+    from = (Math.floor(from / duration) + 1) * duration - (from % duration);
+    animation.currentTime = from;
+  }
+  animation.effect?.updateTiming({ direction });
+  animation.playbackRate = 1;
+  const to = from + delta;
+
+  const animateStep = (timestamp: number) => {
+    if (startedAt === undefined) startedAt = timestamp;
+    const progress = Math.min((timestamp - startedAt) / 420, 1);
+    const easedProgress = 1 - (1 - progress) ** 3;
+    animation.currentTime = from + (to - from) * easedProgress;
+
+    if (progress < 1) {
+      frameRef.current = requestAnimationFrame(animateStep);
+      return;
+    }
+
+    frameRef.current = undefined;
+    animation.play();
+  };
+
+  frameRef.current = requestAnimationFrame(animateStep);
+}
+
+function LogoMark({ logo, duplicate = false }: { logo: ClientLogo; duplicate?: boolean }) {
   return (
-    <div className="client-mark" title={logo.name} aria-label={`Client logo: ${logo.name}`}>
+    <div className="client-mark" title={logo.name} aria-label={duplicate ? undefined : `Client logo: ${logo.name}`} aria-hidden={duplicate || undefined}>
       <img src={logo.src} alt="" />
       <span className="client-mark-name">{logo.name}</span>
+      {logo.country && logo.flag && <span className="client-country"><img className="client-country-flag" src={logo.flag} alt="" /><span>{logo.country}</span></span>}
     </div>
+  );
+}
+
+function FeaturedClients() {
+  const viewportRef = useRef<HTMLDivElement>(null);
+  const trackRef = useRef<HTMLDivElement>(null);
+  const frameRef = useRef<number | undefined>(undefined);
+
+  useEffect(() => () => {
+    if (frameRef.current !== undefined) cancelAnimationFrame(frameRef.current);
+  }, []);
+
+  return (
+    <section className="trusted-strip clients-strip" aria-labelledby="featured-clients-heading">
+      <div className="section-wrap trusted-inner">
+        <span className="trusted-label" id="featured-clients-heading">Featured clients</span>
+        <div className="client-carousel">
+          <button className="client-carousel-control client-carousel-control-prev" type="button" aria-label="Show previous featured client" title="Previous client" onClick={() => advanceCarousel(trackRef.current, viewportRef.current, "reverse", frameRef)}>
+            <ChevronLeft size={19} aria-hidden="true" />
+          </button>
+          <div className="client-marquee" id="featured-clients" role="region" aria-label="Featured client companies" ref={viewportRef}>
+            <div className="client-marks" ref={trackRef}>
+              {clientMarks.map((logo) => <LogoMark key={logo.src} logo={logo} />)}
+              {clientMarks.map((logo) => <LogoMark key={`${logo.src}-duplicate`} logo={logo} duplicate />)}
+            </div>
+          </div>
+          <button className="client-carousel-control client-carousel-control-next" type="button" aria-label="Show next featured client" title="Next client" onClick={() => advanceCarousel(trackRef.current, viewportRef.current, "normal", frameRef)}>
+            <ChevronRight size={19} aria-hidden="true" />
+          </button>
+        </div>
+      </div>
+    </section>
   );
 }
 
@@ -202,46 +345,52 @@ function VideoPlaceholder({ visual, accent }: { visual: string; accent: string }
   );
 }
 
-function StatsStrip() {
-  const stats = [
-    ["375+", "commercial projects delivered"],
-    ["175+", "international clients"],
-    ["100%", "job success & verified seller"],
-    ["MBA", "finance + workflow automation"],
-  ];
-  return <section className="stats-strip" aria-label="Professional results"><div className="section-wrap stats-grid">{stats.map(([value, label]) => <div className="stat-item" key={label}><strong>{value}</strong><span>{label}</span></div>)}</div></section>;
-}
-
 function ServicesSection() {
   const icons = { excel: FileSpreadsheet, dashboard: BarChart3, word: FileText, pdf: Clipboard };
   return <section className="services-section section-wrap" id="services">
-    <div className="section-heading"><div><span className="section-index">01 / Core services</span><h2>Office work,<br /><em>made operational.</em></h2></div><p>Specialist automation for teams that need fewer handoffs, cleaner data, and reliable output inside the tools they already use.</p></div>
+    <div className="section-heading"><div><h2>Office work,<br /><em>made operational.</em></h2></div><p>Specialist automation for teams that need fewer handoffs, cleaner data, and reliable output inside the tools they already use.</p></div>
     <div className="services-grid">{services.map((service) => { const Icon = icons[service.icon as keyof typeof icons]; return <article className="service-card" key={service.number}><div className="service-top"><span className="service-number">{service.number}</span><Icon size={22} /></div><h3>{service.title}</h3><p>{service.description}</p><div className="tag-list">{service.tags.map((tag) => <span key={tag}>{tag}</span>)}</div></article>; })}</div>
   </section>;
 }
 
-function ReviewGallery({ onOpen }: { onOpen: (review: (typeof reviewScreenshots)[number]) => void }) {
+function ReviewGallery({ onOpen }: { onOpen: (review: ReviewScreenshot) => void }) {
+  const viewportRef = useRef<HTMLDivElement>(null);
+  const trackRef = useRef<HTMLDivElement>(null);
+  const frameRef = useRef<number | undefined>(undefined);
+
+  useEffect(() => () => {
+    if (frameRef.current !== undefined) cancelAnimationFrame(frameRef.current);
+  }, []);
+
   return (
     <section className="reviews-section section-wrap" id="reviews">
       <div className="section-heading reviews-heading">
-        <div><span className="section-index">02 / Client reviews</span><h2>Good work,<br /><em>said better.</em></h2></div>
+        <div><h2>Good work,<br /><em>said better.</em></h2></div>
         <p>Real feedback from Fiverr and Upwork clients — shown as proof of how the work feels to use, not just how it is built.</p>
       </div>
-      <div className="review-marquee" aria-label="Fiverr client reviews">
-        <div className="review-track">
-          {reviewScreenshots.map((review, index) => (
-            <article className="review-card" key={`${review.name}-primary-${index}`} role="button" tabIndex={0} onClick={() => onOpen(review)} onKeyDown={(event) => { if (event.key === "Enter" || event.key === " ") { event.preventDefault(); onOpen(review); } }}>
-              <div className="review-screenshot-slot"><img src={review.src} alt={`Fiverr review from ${review.name}`} /></div>
-              <div className="review-caption"><Quote size={16} /><span>Fiverr review · {review.name}</span></div>
-            </article>
-          ))}
-          {reviewScreenshots.map((review, index) => (
-            <article className="review-card" key={`${review.name}-clone-${index}`} role="presentation" tabIndex={-1} aria-hidden="true" onClick={() => onOpen(review)}>
-              <div className="review-screenshot-slot"><img src={review.src} alt="" /></div>
-              <div className="review-caption"><Quote size={16} /><span>Fiverr review · {review.name}</span></div>
-            </article>
-          ))}
+      <div className="review-carousel">
+        <button className="client-carousel-control review-carousel-control-prev" type="button" aria-label="Show previous client review" title="Previous review" onClick={() => advanceCarousel(trackRef.current, viewportRef.current, "reverse", frameRef)}>
+          <ChevronLeft size={19} aria-hidden="true" />
+        </button>
+        <div className="review-marquee" aria-label="Fiverr client reviews" ref={viewportRef}>
+          <div className="review-track" ref={trackRef}>
+            {reviewScreenshots.map((review, index) => (
+              <article className="review-card" key={`${review.name}-primary-${index}`} role="button" tabIndex={0} onClick={() => onOpen(review)} onKeyDown={(event) => { if (event.key === "Enter" || event.key === " ") { event.preventDefault(); onOpen(review); } }}>
+                <div className="review-screenshot-slot"><img src={review.src} alt={`Fiverr review from ${review.name}`} /></div>
+                <div className="review-caption"><Quote size={16} /><span>Fiverr review · {review.name}</span></div>
+              </article>
+            ))}
+            {reviewScreenshots.map((review, index) => (
+              <article className="review-card" key={`${review.name}-clone-${index}`} role="presentation" tabIndex={-1} aria-hidden="true" onClick={() => onOpen(review)}>
+                <div className="review-screenshot-slot"><img src={review.src} alt="" /></div>
+                <div className="review-caption"><Quote size={16} /><span>Fiverr review · {review.name}</span></div>
+              </article>
+            ))}
+          </div>
         </div>
+        <button className="client-carousel-control review-carousel-control-next" type="button" aria-label="Show next client review" title="Next review" onClick={() => advanceCarousel(trackRef.current, viewportRef.current, "normal", frameRef)}>
+          <ChevronRight size={19} aria-hidden="true" />
+        </button>
       </div>
     </section>
   );
@@ -277,13 +426,15 @@ function ProjectCard({ project }: { project: (typeof projects)[number] }) {
 }
 
 export default function Home({ theme, toggleTheme }: HomeProps) {
+  const heroActionsRef = useRef<HTMLDivElement>(null);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [showFloatingActions, setShowFloatingActions] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [emailError, setEmailError] = useState("");
   const [submitError, setSubmitError] = useState("");
   const [copiedEmail, setCopiedEmail] = useState(false);
-  const [selectedReview, setSelectedReview] = useState<(typeof reviewScreenshots)[number] | null>(null);
+  const [selectedReview, setSelectedReview] = useState<ReviewScreenshot | null>(null);
 
   const validateEmail = (value: string) => {
     if (!value) return "Email is required.";
@@ -343,6 +494,17 @@ export default function Home({ theme, toggleTheme }: HomeProps) {
   const closeMenu = () => setMenuOpen(false);
 
   useEffect(() => {
+    const heroActions = heroActionsRef.current;
+    if (!heroActions) return;
+
+    const observer = new IntersectionObserver(([entry]) => {
+      setShowFloatingActions(!entry.isIntersecting);
+    });
+    observer.observe(heroActions);
+    return () => observer.disconnect();
+  }, []);
+
+  useEffect(() => {
     if (!selectedReview) return;
     const handleKeyDown = (event: KeyboardEvent) => { if (event.key === "Escape") setSelectedReview(null); };
     document.addEventListener("keydown", handleKeyDown);
@@ -381,34 +543,28 @@ export default function Home({ theme, toggleTheme }: HomeProps) {
             <div className="availability"><span className="pulse-dot" /> Available for freelance projects</div>
             <p className="hero-kicker">Muhammad Bilal · Excel VBA, VSTO & Office Automation Specialist · MBA in Finance</p>
             <h1>Custom Excel Add-Ins,<br /><em>VBA Macros & Workflow Automation</em></h1><p className="hero-subhead">Built for enterprise speed & accuracy.</p>
-            <p className="hero-description">Helping businesses eliminate manual data entry, automate complex reports, and build professional desktop Office extensions. Over 375+ successful projects delivered worldwide.</p>
-            <div className="hero-actions hero-actions-stacked">
-              <a className="button button-primary" href="#contact" onClick={(event) => smoothScrollTo(event, "contact")}>Start a Project <ArrowUpRight size={18} /></a>
-              <a className="button whatsapp-button" href="https://wa.me/923462116322" target="_blank" rel="noreferrer"><MessageCircle size={17} /> WhatsApp me</a>
-              <div className="hero-marketplace-links"><a className="button button-secondary" href="https://upwork.com/freelancers/muhammadbilal88" target="_blank" rel="noreferrer">Hire on Upwork <ArrowUpRight size={16} /></a><a className="button button-secondary" href="https://www.fiverr.com/s/d0DyPYZ" target="_blank" rel="noreferrer">Order on Fiverr <ArrowUpRight size={16} /></a></div>
+            <p className="hero-description">Helping businesses eliminate manual data entry, automate complex reports, and build professional desktop Office extensions.</p>
+            <div className="hero-actions hero-actions-stacked" ref={heroActionsRef}>
+              <a className="button button-primary" href="#contact" onClick={(event) => smoothScrollTo(event, "contact")}><Send size={16} /> Start a Project <ArrowUpRight className="hero-action-arrow" size={15} /></a>
+              <a className="button button-secondary hero-action-upwork" href="https://upwork.com/freelancers/muhammadbilal88" target="_blank" rel="noreferrer"><BriefcaseBusiness size={16} /> Hire on Upwork <ArrowUpRight className="hero-action-arrow" size={15} /></a>
+              <a className="button button-secondary hero-action-fiverr" href="https://www.fiverr.com/s/d0DyPYZ" target="_blank" rel="noreferrer"><ShoppingBag size={16} /> Order on Fiverr <ArrowUpRight className="hero-action-arrow" size={15} /></a>
+              <a className="button whatsapp-button" href="https://wa.me/923462116322" target="_blank" rel="noreferrer"><MessageCircle size={17} /> WhatsApp me <ArrowUpRight className="hero-action-arrow" size={15} /></a>
             </div>
-            <p className="hero-proofline">Over 375+ successful projects delivered worldwide.</p>
           </div>
           <div className="profile-visual">
-            <div className="profile-photo-frame"><img src="/manus-storage/ChatGPT_6c7e1dbf.png" alt="Muhammad Bilal, freelance software and workflow automation developer" /></div>
-            <div className="profile-label"><span className="pulse-dot" /> Muhammad Bilal <small>Excel + Office automation</small></div>
-            <div className="profile-stat"><strong>MBA</strong><span>finance<br />+ Office<br />automation</span></div>
-          </div>
-        </section>
-
-        <StatsStrip />
-
-        <section className="trusted-strip clients-strip" aria-label="Featured client logos">
-          <div className="section-wrap trusted-inner">
-            <span className="trusted-label">Featured clients<br /><small>selected work</small></span>
-            <div className="client-marquee" aria-label="Featured client companies">
-              <div className="client-marks">
-                {clientMarks.map((logo) => <LogoMark key={`${logo.name}-primary`} logo={logo} />)}
-                {clientMarks.map((logo) => <LogoMark key={`${logo.name}-clone`} logo={logo} />)}
-              </div>
+            <div className="profile-photo-frame">
+              <img src="/manus-storage/ChatGPT_6c7e1dbf.png" alt="Muhammad Bilal, freelance software and workflow automation developer" />
+              <div className="profile-label">⚡ Top Rated Automation Specialist</div>
+            </div>
+            <div className="profile-metrics" aria-label="Professional results">
+              <div className="profile-metric"><strong>375+</strong><span>Commercial projects delivered</span></div>
+              <div className="profile-metric"><strong>175+</strong><span>International clients</span></div>
+              <div className="profile-metric"><strong>100%</strong><span>Job Success Rate</span></div>
             </div>
           </div>
         </section>
+
+        <FeaturedClients />
 
         <ServicesSection />
 
@@ -416,7 +572,7 @@ export default function Home({ theme, toggleTheme }: HomeProps) {
 
         <section className="work-section section-wrap" id="work">
           <div className="section-heading work-heading">
-            <div><span className="section-index">03 / Featured case studies</span><h2>Proof, not promises.</h2></div>
+            <div><h2>Proof, not promises.</h2></div>
             <p>Enterprise-minded Office automation that turns messy inputs into consistent, measurable output.</p>
           </div>
           <div className="project-grid">
@@ -425,8 +581,8 @@ export default function Home({ theme, toggleTheme }: HomeProps) {
         </section>
 
         <section className="contact-section section-wrap" id="contact">
-          <div className="contact-intro"><span className="section-index">05 / Instant connect</span><h2>Have a workflow<br /><em>worth fixing?</em></h2><p>Share the process, tools, and timeline. I will come back with a practical route to a faster, more accurate workflow.</p><div className="quick-connect" aria-label="Quick connect options">
-              <div className="email-connect"><span className="channel-logo channel-gmail"><Mail size={16} /></span><span className="email-copy"><strong>Business email</strong><small>ibn.e.ashiq@gmail.com</small></span><a className="email-open" href="mailto:ibn.e.ashiq@gmail.com">Email <ArrowUpRight size={13} /></a><button type="button" className="copy-email" onClick={copyEmail}>{copiedEmail ? <><Check size={14} /> Copied</> : <><Clipboard size={14} /> Copy</>}</button></div>
+          <div className="contact-intro"><h2>Have a workflow<br /><em>worth fixing?</em></h2><p>Share the process, tools, and timeline. I will come back with a practical route to a faster, more accurate workflow.</p><div className="quick-connect" aria-label="Quick connect options">
+              <div className="email-connect"><span className="channel-logo channel-gmail"><Mail size={16} /></span><span className="email-copy"><strong>Direct Email</strong><small>ibn.e.ashiq@gmail.com</small></span><a className="email-open" href="mailto:ibn.e.ashiq@gmail.com">Email <ArrowUpRight size={13} /></a><button type="button" className="copy-email" onClick={copyEmail}>{copiedEmail ? <><Check size={14} /> Copied</> : <><Clipboard size={14} /> Copy</>}</button></div>
               <a className="contact-channel whatsapp-contact" href="https://wa.me/923462116322" target="_blank" rel="noreferrer"><span className="channel-logo channel-whatsapp"><MessageCircle size={16} /></span><span><strong>WhatsApp me</strong><small>+92 346 2116322 · fastest reply</small></span><ArrowUpRight size={15} /></a>
               <div className="contact-marketplace-row"><a className="contact-channel" href="https://upwork.com/freelancers/muhammadbilal88" target="_blank" rel="noreferrer"><span className="channel-logo channel-upwork">U</span><span><strong>Upwork</strong><small>Direct hire</small></span><ArrowUpRight size={15} /></a><a className="contact-channel" href="https://www.fiverr.com/s/d0DyPYZ" target="_blank" rel="noreferrer"><span className="channel-logo channel-fiverr">F</span><span><strong>Fiverr</strong><small>Direct order</small></span><ArrowUpRight size={15} /></a></div>
             </div></div>
@@ -437,16 +593,19 @@ export default function Home({ theme, toggleTheme }: HomeProps) {
               <label>Service needed<select name="serviceNeeded" defaultValue="" required><option value="" disabled>Select a service</option><option>Custom Excel / VSTO Add-in</option><option>MS Word Macro</option><option>Business Dashboard</option><option>Fillable PDF / Other</option></select></label>
               <label>Project description & timeline<textarea name="description" rows={5} placeholder="What needs automating, and when would you like it ready?" required /></label>
               <button className="button button-primary form-submit" type="submit" disabled={submitting}>{submitting ? <><span className="submit-spinner" aria-hidden="true" /> Sending…</> : <>Send project brief <ArrowUpRight size={18} /></>}</button>
-              <p className="form-note">You stay on this page. Your details go directly to Muhammad.</p>{submitError && <p className="form-error" role="alert">{submitError} <a href="https://wa.me/923462116322" target="_blank" rel="noreferrer">Open WhatsApp</a></p>}
+              <p className="form-note">Expect a response and initial project scope within 24 hours.</p>{submitError && <p className="form-error" role="alert">{submitError} <a href="https://wa.me/923462116322" target="_blank" rel="noreferrer">Open WhatsApp</a></p>}
             </form>}
           </div>
         </section>
       </main>
 
-      <div className="floating-actions" aria-label="Quick contact actions">
-        <a className="floating-action floating-whatsapp" href="https://wa.me/923462116322" target="_blank" rel="noreferrer"><MessageCircle size={18} /><span>WhatsApp</span></a>
-        <a className="floating-action floating-project" href="#contact" onClick={(event) => smoothScrollTo(event, "contact")}><Sparkles size={17} /><span>Start a project</span></a>
-      </div>
+      {showFloatingActions && (
+        <div className="floating-actions" aria-label="Quick navigation and contact actions">
+          <a className="floating-action floating-whatsapp" href="https://wa.me/923462116322" target="_blank" rel="noreferrer"><MessageCircle size={18} /><span>WhatsApp</span></a>
+          <a className="floating-action floating-project" href="#contact" onClick={(event) => smoothScrollTo(event, "contact")}><Sparkles size={17} /><span>Start a project</span></a>
+          <button className="floating-action floating-top" type="button" aria-label="Back to top" onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}><ChevronUp size={19} /></button>
+        </div>
+      )}
 
       {selectedReview && (
         <div className="review-lightbox" role="dialog" aria-modal="true" aria-label={`Full Fiverr review from ${selectedReview.name}`} onClick={() => setSelectedReview(null)}>
