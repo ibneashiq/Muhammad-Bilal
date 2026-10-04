@@ -13,23 +13,27 @@ import {
   FileSpreadsheet,
   FileText,
   Github,
+  Instagram,
   Linkedin,
   Mail,
   MessageCircle,
   Menu,
   Moon,
+  Palette,
   Play,
   Quote,
   Send,
   ShoppingBag,
   Sparkles,
   Sun,
+  Waves,
+  Youtube,
   Workflow,
   X,
 } from "lucide-react";
 import { FormEvent, MouseEvent, useEffect, useRef, useState } from "react";
 
-type Theme = "light" | "dark";
+type Theme = "light" | "dark" | "warm" | "cool";
 type CarouselDirection = "normal" | "reverse";
 
 type HomeProps = {
@@ -240,14 +244,14 @@ function FeaturedClients() {
   }, []);
 
   return (
-    <section className="trusted-strip clients-strip" aria-labelledby="featured-clients-heading">
+    <section className="trusted-strip clients-strip" id="featured-clients" aria-labelledby="featured-clients-heading">
       <div className="section-wrap trusted-inner">
         <span className="trusted-label" id="featured-clients-heading">Featured clients</span>
         <div className="client-carousel">
           <button className="client-carousel-control client-carousel-control-prev" type="button" aria-label="Show previous featured client" title="Previous client" onClick={() => advanceCarousel(trackRef.current, viewportRef.current, "reverse", frameRef)}>
             <ChevronLeft size={19} aria-hidden="true" />
           </button>
-          <div className="client-marquee" id="featured-clients" role="region" aria-label="Featured client companies" ref={viewportRef}>
+          <div className="client-marquee" role="region" aria-label="Featured client companies" ref={viewportRef}>
             <div className="client-marks" ref={trackRef}>
               {clientMarks.map((logo) => <LogoMark key={logo.src} logo={logo} />)}
               {clientMarks.map((logo) => <LogoMark key={`${logo.src}-duplicate`} logo={logo} duplicate />)}
@@ -424,9 +428,11 @@ function ProjectCard({ project }: { project: (typeof projects)[number] }) {
 }
 
 export default function Home({ theme, toggleTheme }: HomeProps) {
-  const heroActionsRef = useRef<HTMLDivElement>(null);
+  const heroSectionRef = useRef<HTMLElement>(null);
+  const contactSectionRef = useRef<HTMLElement>(null);
   const [menuOpen, setMenuOpen] = useState(false);
   const [showFloatingActions, setShowFloatingActions] = useState(false);
+  const [isContactSectionVisible, setIsContactSectionVisible] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [emailError, setEmailError] = useState("");
@@ -492,13 +498,18 @@ export default function Home({ theme, toggleTheme }: HomeProps) {
   const closeMenu = () => setMenuOpen(false);
 
   useEffect(() => {
-    const heroActions = heroActionsRef.current;
-    if (!heroActions) return;
+    const heroSection = heroSectionRef.current;
+    const contactSection = contactSectionRef.current;
+    if (!heroSection || !contactSection) return;
 
-    const observer = new IntersectionObserver(([entry]) => {
-      setShowFloatingActions(!entry.isIntersecting);
+    const observer = new IntersectionObserver((entries) => {
+      for (const entry of entries) {
+        if (entry.target === heroSection) setShowFloatingActions(!entry.isIntersecting);
+        if (entry.target === contactSection) setIsContactSectionVisible(entry.isIntersecting);
+      }
     });
-    observer.observe(heroActions);
+    observer.observe(heroSection);
+    observer.observe(contactSection);
     return () => observer.disconnect();
   }, []);
 
@@ -522,27 +533,28 @@ export default function Home({ theme, toggleTheme }: HomeProps) {
           {menuOpen ? <X size={20} /> : <Menu size={20} />}
         </button>
         <nav className={`site-nav ${menuOpen ? "is-open" : ""}`} aria-label="Main navigation">
-          <a href="#work" onClick={(event) => smoothScrollTo(event, "work")}>Selected work</a>
+          <a href="#featured-clients" onClick={(event) => smoothScrollTo(event, "featured-clients")}>Clients</a>
+          <a href="#services" onClick={(event) => smoothScrollTo(event, "services")}>Services</a>
           <a href="#reviews" onClick={(event) => smoothScrollTo(event, "reviews")}>Reviews</a>
+          <a href="#work" onClick={(event) => smoothScrollTo(event, "work")}>Work</a>
           <a href="#contact" onClick={(event) => smoothScrollTo(event, "contact")}>Contact</a>
         </nav>
         <div className="header-actions">
-          <button className="theme-toggle" type="button" onClick={toggleTheme} aria-label={`Switch to ${theme === "dark" ? "light" : "dark"} theme`}>
-            {theme === "dark" ? <Sun size={17} /> : <Moon size={17} />}
-            <span>{theme === "dark" ? "Light" : "Dark"}</span>
+          <button className="theme-toggle" type="button" onClick={toggleTheme} aria-label={`Current theme: ${theme}. Switch to ${theme === "light" ? "dark" : theme === "dark" ? "warm" : theme === "warm" ? "cool" : "light"} theme`} title={`Current theme: ${theme}`}>
+            {theme === "light" ? <Sun size={17} /> : theme === "dark" ? <Moon size={17} /> : theme === "warm" ? <Palette size={17} /> : <Waves size={17} />}
+            <span>{theme === "light" ? "Light" : theme === "dark" ? "Dark" : theme === "warm" ? "Warm" : "Cool"}</span>
           </button>
-          <a className="header-cta" href="#contact" onClick={(event) => smoothScrollTo(event, "contact")}>Let's talk <ArrowUpRight size={16} /></a>
         </div>
       </header>
 
       <main id="top">
-        <section className="hero-section section-wrap">
+        <section className="hero-section section-wrap" ref={heroSectionRef}>
           <div className="hero-copy">
             <div className="availability"><span className="pulse-dot" /> Available for freelance projects</div>
             <p className="hero-kicker">Muhammad Bilal · Excel VBA, VSTO & Office Automation Specialist · MBA in Finance</p>
             <h1>Custom Excel Add-Ins,<br /><em>VBA Macros & Workflow Automation</em></h1><p className="hero-subhead">Built for enterprise speed & accuracy.</p>
             <p className="hero-description">Helping businesses eliminate manual data entry, automate complex reports, and build professional desktop Office extensions.</p>
-            <div className="hero-actions hero-actions-stacked" ref={heroActionsRef}>
+            <div className="hero-actions hero-actions-stacked">
               <a className="button button-primary" href="#contact" onClick={(event) => smoothScrollTo(event, "contact")}><Send size={16} /> Start a Project <ArrowUpRight className="hero-action-arrow" size={15} /></a>
               <a className="button button-secondary hero-action-upwork" href="https://upwork.com/freelancers/muhammadbilal88" target="_blank" rel="noreferrer"><BriefcaseBusiness size={16} /> Hire on Upwork <ArrowUpRight className="hero-action-arrow" size={15} /></a>
               <a className="button button-secondary hero-action-fiverr" href="https://www.fiverr.com/s/d0DyPYZ" target="_blank" rel="noreferrer"><ShoppingBag size={16} /> Order on Fiverr <ArrowUpRight className="hero-action-arrow" size={15} /></a>
@@ -578,7 +590,7 @@ export default function Home({ theme, toggleTheme }: HomeProps) {
           </div>
         </section>
 
-        <section className="contact-section section-wrap" id="contact">
+        <section className="contact-section section-wrap" id="contact" ref={contactSectionRef}>
           <div className="contact-intro"><h2>Have a workflow<br /><em>worth fixing?</em></h2><p>Share the process, tools, and timeline. I will come back with a practical route to a faster, more accurate workflow.</p><div className="quick-connect" aria-label="Quick connect options">
               <div className="email-connect"><span className="channel-logo channel-gmail"><Mail size={16} /></span><span className="email-copy"><strong>Direct Email</strong><small>ibn.e.ashiq@gmail.com</small></span><a className="email-open" href="mailto:ibn.e.ashiq@gmail.com">Email <ArrowUpRight size={13} /></a><button type="button" className="copy-email" onClick={copyEmail}>{copiedEmail ? <><Check size={14} /> Copied</> : <><Clipboard size={14} /> Copy</>}</button></div>
               <a className="contact-channel whatsapp-contact" href="https://wa.me/923462116322" target="_blank" rel="noreferrer"><span className="channel-logo channel-whatsapp"><MessageCircle size={16} /></span><span><strong>WhatsApp me</strong><small>+92 346 2116322 · fastest reply</small></span><ArrowUpRight size={15} /></a>
@@ -599,8 +611,12 @@ export default function Home({ theme, toggleTheme }: HomeProps) {
 
       {showFloatingActions && (
         <div className="floating-actions" aria-label="Quick navigation and contact actions">
-          <a className="floating-action floating-whatsapp" href="https://wa.me/923462116322" target="_blank" rel="noreferrer"><MessageCircle size={18} /><span>WhatsApp</span></a>
-          <a className="floating-action floating-project" href="#contact" onClick={(event) => smoothScrollTo(event, "contact")}><Sparkles size={17} /><span>Start a project</span></a>
+          {!isContactSectionVisible && (
+            <>
+              <a className="floating-action floating-whatsapp" href="https://wa.me/923462116322" target="_blank" rel="noreferrer"><MessageCircle size={18} /><span>WhatsApp</span></a>
+              <a className="floating-action floating-project" href="#contact" onClick={(event) => smoothScrollTo(event, "contact")}><Sparkles size={17} /><span>Start a project</span></a>
+            </>
+          )}
           <button className="floating-action floating-top" type="button" aria-label="Back to top" onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}><ChevronUp size={19} /></button>
         </div>
       )}
@@ -615,7 +631,15 @@ export default function Home({ theme, toggleTheme }: HomeProps) {
         </div>
       )}
 
-      <footer className="site-footer section-wrap"><div className="footer-brand"><span className="brand-initial">MB</span><span>© 2026 Muhammad Bilal</span></div><span className="footer-note">Excel, Office, and workflow systems that give good work room to breathe.</span><div className="footer-links"><a href="mailto:ibn.e.ashiq@gmail.com" aria-label="Email Muhammad Bilal"><Mail size={17} /></a><a href="https://www.facebook.com/ibn.ashiq/" target="_blank" rel="noreferrer" aria-label="Facebook"><span className="social-letter">f</span></a><a href="https://www.linkedin.com/in/bilalashiq/" target="_blank" rel="noreferrer" aria-label="LinkedIn"><Linkedin size={17} /></a><a href="https://wa.me/923462116322" target="_blank" rel="noreferrer" aria-label="WhatsApp"><MessageCircle size={17} /></a><Github size={17} aria-hidden="true" /></div></footer>
+      <footer className="site-footer section-wrap"><div className="footer-brand"><span className="brand-initial">MB</span><span>© 2026 Muhammad Bilal</span></div><span className="footer-note">Excel, Office, and workflow systems that give good work room to breathe.</span><div className="footer-links" aria-label="Social and contact links">
+        <a href="mailto:ibn.e.ashiq@gmail.com" aria-label="Email Muhammad Bilal"><Mail size={17} /></a>
+        <a href="https://www.facebook.com/ibn.ashiq/" target="_blank" rel="noreferrer" aria-label="Facebook"><span className="social-letter">f</span></a>
+        <a href="https://www.instagram.com/ibn.e.ashiq/" target="_blank" rel="noreferrer" aria-label="Instagram"><Instagram size={17} /></a>
+        <a href="https://www.linkedin.com/in/bilalashiq/" target="_blank" rel="noreferrer" aria-label="LinkedIn"><Linkedin size={17} /></a>
+        <a href="https://www.youtube.com/@VBAbyMBA" target="_blank" rel="noreferrer" aria-label="YouTube"><Youtube size={17} /></a>
+        <a href="https://github.com/ibneashiq" target="_blank" rel="noreferrer" aria-label="GitHub"><Github size={17} /></a>
+        <a href="https://wa.me/923462116322" target="_blank" rel="noreferrer" aria-label="WhatsApp"><MessageCircle size={17} /></a>
+      </div></footer>
     </div>
   );
 }

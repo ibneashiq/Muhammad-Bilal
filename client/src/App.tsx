@@ -1,38 +1,52 @@
-import { useEffect, useState } from "react";
+import { useEffect, useLayoutEffect, useState } from "react";
 import { Route, Switch } from "wouter";
 import ErrorBoundary from "./components/ErrorBoundary";
 import Home from "./pages/Home";
 
-type Theme = "light" | "dark";
+type Theme = "light" | "dark" | "warm" | "cool";
 type ThemeContextValue = { theme: Theme; toggleTheme: () => void };
 type ThemeRenderer = (value: ThemeContextValue) => React.ReactNode;
 
+const themes: Theme[] = ["light", "dark", "warm", "cool"];
+
+function readSavedTheme(): Theme | undefined {
+  const savedTheme = window.localStorage.getItem("bilal-theme");
+  return themes.find((theme) => theme === savedTheme);
+}
+
+function syncThemeClasses(theme: Theme) {
+  const root = document.documentElement;
+  for (const themeClass of themes) {
+    root.classList.toggle(themeClass, themeClass === theme);
+  }
+}
+
 function ThemeController({ children }: { children: ThemeRenderer }) {
-  const [theme, setTheme] = useState<Theme>("light");
+  const [theme, setTheme] = useState<Theme>(() => (
+    readSavedTheme() ?? (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light")
+  ));
+  const [hasSavedTheme, setHasSavedTheme] = useState(() => readSavedTheme() !== undefined);
+
+  useLayoutEffect(() => {
+    syncThemeClasses(theme);
+  }, [theme]);
 
   useEffect(() => {
-    const savedTheme = window.localStorage.getItem("bilal-theme") as Theme | null;
+    if (hasSavedTheme) return;
     const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
-    const nextTheme: Theme = savedTheme ?? (mediaQuery.matches ? "dark" : "light");
-
-    setTheme(nextTheme);
-    document.documentElement.classList.toggle("dark", nextTheme === "dark");
-
-    if (!savedTheme) {
-      const handleSystemThemeChange = (event: MediaQueryListEvent) => {
-        setTheme(event.matches ? "dark" : "light");
-        document.documentElement.classList.toggle("dark", event.matches);
-      };
-      mediaQuery.addEventListener("change", handleSystemThemeChange);
-      return () => mediaQuery.removeEventListener("change", handleSystemThemeChange);
-    }
-  }, []);
+    const handleSystemThemeChange = (event: MediaQueryListEvent) => {
+      setTheme(event.matches ? "dark" : "light");
+    };
+    mediaQuery.addEventListener("change", handleSystemThemeChange);
+    return () => mediaQuery.removeEventListener("change", handleSystemThemeChange);
+  }, [hasSavedTheme]);
 
   const toggleTheme = () => {
-    const nextTheme: Theme = theme === "dark" ? "light" : "dark";
+    const currentIndex = themes.indexOf(theme);
+    const nextTheme = themes[(currentIndex + 1) % themes.length];
     setTheme(nextTheme);
     window.localStorage.setItem("bilal-theme", nextTheme);
-    document.documentElement.classList.toggle("dark", nextTheme === "dark");
+    setHasSavedTheme(true);
   };
 
   return <>{children({ theme, toggleTheme })}</>;

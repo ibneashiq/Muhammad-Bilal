@@ -39,6 +39,40 @@
   --shadow: 0 22px 70px rgba(0, 0, 0, .24);
 }
 
+.warm {
+  color-scheme: light;
+  --bg: #f7f0e7;
+  --surface: #fffaf3;
+  --surface-soft: #efe4d7;
+  --ink: #352820;
+  --muted: #806f62;
+  --line: #e5d5c5;
+  --line-strong: #c9b19d;
+  --lime: #d97757;
+  --lime-ink: #fffaf5;
+  --blue: #8bbac2;
+  --orange: #e99a69;
+  --violet: #b49aba;
+  --shadow: 0 22px 70px rgba(83, 54, 35, .12);
+}
+
+.cool {
+  color-scheme: light;
+  --bg: #eef3f6;
+  --surface: #fbfdfe;
+  --surface-soft: #e1ebef;
+  --ink: #1c2c34;
+  --muted: #617680;
+  --line: #cfdee4;
+  --line-strong: #a9c0ca;
+  --lime: #36a6a0;
+  --lime-ink: #f7ffff;
+  --blue: #70b9d0;
+  --orange: #e6a47a;
+  --violet: #9ea9d4;
+  --shadow: 0 22px 70px rgba(33, 66, 79, .12);
+}
+
 * { box-sizing: border-box; }
 html { scroll-behavior: smooth; }
 body { margin: 0; min-width: 320px; background: var(--bg); color: var(--ink); font-family: var(--body); -webkit-font-smoothing: antialiased; }
@@ -304,6 +338,10 @@ h1 { font-size: clamp(3.15rem, 6vw, 6.1rem); margin-bottom: 18px; }
 /* Unified client showcase, review lightbox, and persistent quick-contact controls. */
 .clients-strip { background: #fff !important; color: #18211c; border-color: #e1e5df; }
 .dark .clients-strip { background: #fff !important; color: #18211c; border-color: #e1e5df; }
+.warm .clients-strip { background: #fcf6ed !important; color: #352820; border-color: #e5d5c5; }
+.warm .clients-strip .trusted-label { border-color: #ead7c4; background: #f4e8da; color: #80604c; }
+.cool .clients-strip { background: #f4f8fa !important; color: #1c2c34; border-color: #cfdee4; }
+.cool .clients-strip .trusted-label { border-color: #d5e4e9; background: #eaf2f5; color: #526b76; }
 .clients-strip .trusted-label { color: #6b756e; }.clients-strip .trusted-inner { min-height: 190px; padding-top: 24px; padding-bottom: 24px; }
 .clients-strip .client-marquee { mask-image: linear-gradient(90deg, transparent, #000 4%, #000 96%, transparent); }
 .clients-strip .client-marks { gap: 20px; animation-duration: 30s; }
@@ -446,6 +484,26 @@ html {
   border-color: #d7e0d5;
   background: linear-gradient(145deg, #fff 8%, #f1f6ed 100%);
   box-shadow: 0 17px 36px rgba(24, 33, 28, .14);
+}
+.warm .clients-strip .client-mark {
+  border-color: #ebddd0;
+  background: linear-gradient(145deg, #fffaf3 8%, #f6ecdf 100%);
+  box-shadow: 0 12px 30px rgba(83, 54, 35, .1);
+}
+.warm .clients-strip .client-mark:hover {
+  border-color: #d7b9a3;
+  background: linear-gradient(145deg, #fffaf3 8%, #f3e2d2 100%);
+  box-shadow: 0 17px 36px rgba(83, 54, 35, .16);
+}
+.cool .clients-strip .client-mark {
+  border-color: #d8e5e9;
+  background: linear-gradient(145deg, #fbfdfe 8%, #eaf2f5 100%);
+  box-shadow: 0 12px 30px rgba(33, 66, 79, .1);
+}
+.cool .clients-strip .client-mark:hover {
+  border-color: #b8d0d8;
+  background: linear-gradient(145deg, #fbfdfe 8%, #e0eef1 100%);
+  box-shadow: 0 17px 36px rgba(33, 66, 79, .16);
 }
 
 .reviews-section {
