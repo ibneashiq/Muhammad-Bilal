@@ -315,7 +315,10 @@ h1 { font-size: clamp(3.15rem, 6vw, 6.1rem); margin-bottom: 18px; }
 .clients-strip .client-marquee { overflow: hidden; mask-image: linear-gradient(90deg, transparent, #000 5%, #000 95%, transparent); }
 .clients-strip .client-marquee::-webkit-scrollbar { display: none; }
 .clients-strip .client-marks { width: max-content; gap: 0; animation: client-flow 34s linear infinite; will-change: transform; }
-.clients-strip .client-marquee:hover .client-marks { animation-play-state: running; }
+.clients-strip .client-marquee:hover .client-marks,
+.clients-strip .client-marquee:focus-within .client-marks { animation-play-state: paused; }
+.review-marquee:hover .review-track,
+.review-marquee:focus-within .review-track { animation-play-state: paused; }
 .clients-strip .client-mark { display: flex; flex: 0 0 clamp(220px, 22vw, 280px); flex-direction: column; align-items: center; justify-content: center; min-height: 184px; padding: 18px 12px; scroll-snap-align: start; }
 .clients-strip .client-mark img { max-width: 230px; max-height: 128px; }
 .clients-strip .client-mark-name { position: static; width: 100%; max-width: none; margin-top: 13px; padding: 0; border: 0; background: transparent; color: #58635b; font-family: var(--display); font-size: 10px; font-weight: 700; letter-spacing: .04em; line-height: 1.25; opacity: 1; pointer-events: auto; text-align: center; text-transform: none; transform: none; }
