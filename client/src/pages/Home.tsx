@@ -32,6 +32,8 @@ import {
   X,
 } from "lucide-react";
 import { FormEvent, MouseEvent, useEffect, useRef, useState } from "react";
+import serviceDashboardImage from "../assets/service-financial-dashboards.jpg";
+import serviceAddinImage from "../assets/service-excel-addins.jpg";
 
 type Theme = "light" | "dark" | "warm" | "cool";
 type CarouselDirection = "normal" | "reverse";
@@ -102,8 +104,12 @@ const services = [
   { number: "01", title: "Custom Excel Add-Ins & VSTO Development", description: "Bespoke desktop tools, custom ribbon tabs, UserForms, and COM extensions that operate seamlessly inside Microsoft Excel.", tags: ["VSTO", ".xlsm", "Ribbon XML", "UserForm GUI", "C# / VB.NET"], icon: "excel" },
   { number: "02", title: "Interactive Business & Financial Dashboards", description: "Automated KPI trackers, dynamic pivot reports, and financial models built with deep accounting rigor, backed by an MBA in Finance.", tags: ["Power Query", "Financial Modeling", "KPI Dashboards", "QuickBooks"], icon: "dashboard" },
   { number: "03", title: "MS Word & Document Assembly Automation", description: "High-speed VBA macros for batch text cleaning, complex spintax processing, transcript formatting, and barcode/EAN mail merges.", tags: ["Word VBA", "Bulk Formatting", "Mail Merge", "Regex Scripting"], icon: "word" },
-  { number: "04", title: "Acrobat Pro Fillable PDFs & Data Extraction", description: "Smart fillable forms, automated data parsing between Excel, Word, and PDF, and secure document workflows.", tags: ["Adobe Acrobat Pro", "Acrobat JavaScript", "PDF to Excel"], icon: "pdf" },
 ];
+
+const serviceIllustrations: Record<string, { src: string; alt: string }> = {
+  "01": { src: serviceAddinImage, alt: "Excel add-in development, custom tools, and data automation illustration" },
+  "02": { src: serviceDashboardImage, alt: "Business dashboard, financial reporting, and secure workflow illustration" },
+};
 
 type ClientLogo = { name: string; src: string; country?: string; flag?: string };
 type ReviewScreenshot = { name: string; src: string };
@@ -246,7 +252,7 @@ function FeaturedClients() {
   return (
     <section className="trusted-strip clients-strip" id="featured-clients" aria-labelledby="featured-clients-heading">
       <div className="section-wrap trusted-inner">
-        <span className="trusted-label" id="featured-clients-heading">Featured clients</span>
+        <h2 className="trusted-label" id="featured-clients-heading">Featured clients</h2>
         <div className="client-carousel">
           <button className="client-carousel-control client-carousel-control-prev" type="button" aria-label="Show previous featured client" title="Previous client" onClick={() => advanceCarousel(trackRef.current, viewportRef.current, "reverse", frameRef)}>
             <ChevronLeft size={19} aria-hidden="true" />
@@ -350,10 +356,31 @@ function VideoPlaceholder({ visual, accent }: { visual: string; accent: string }
 }
 
 function ServicesSection() {
-  const icons = { excel: FileSpreadsheet, dashboard: BarChart3, word: FileText, pdf: Clipboard };
+  const icons = { excel: FileSpreadsheet, dashboard: BarChart3, word: FileText };
+  const viewportRef = useRef<HTMLDivElement>(null);
+  const trackRef = useRef<HTMLDivElement>(null);
+  const frameRef = useRef<number | undefined>(undefined);
+
   return <section className="services-section section-wrap" id="services">
-    <div className="section-heading"><div><h2>Office work,<br /><em>made operational.</em></h2></div><p>Specialist automation for teams that need fewer handoffs, cleaner data, and reliable output inside the tools they already use.</p></div>
-    <div className="services-grid">{services.map((service) => { const Icon = icons[service.icon as keyof typeof icons]; return <article className="service-card" key={service.number}><div className="service-top"><span className="service-number">{service.number}</span><Icon size={22} /></div><h3>{service.title}</h3><p>{service.description}</p><div className="tag-list">{service.tags.map((tag) => <span key={tag}>{tag}</span>)}</div></article>; })}</div>
+    <div className="services-intro">
+      <div className="services-copy">
+        <div className="section-heading"><div><h2>Office work,<br /><em>made operational.</em></h2></div></div>
+        <p>Specialist automation for teams that need fewer handoffs, cleaner data, and reliable output inside the tools they already use.</p>
+      </div>
+    </div>
+    <div className="services-carousel">
+      <button className="client-carousel-control services-carousel-control-prev" type="button" aria-label="Show previous service" title="Previous service" onClick={() => advanceCarousel(trackRef.current, viewportRef.current, "reverse", frameRef)}>
+        <ChevronLeft size={19} aria-hidden="true" />
+      </button>
+      <div className="services-carousel-viewport" aria-label="Services" ref={viewportRef}>
+        <div className="services-grid" ref={trackRef}>
+          {services.map((service) => { const Icon = icons[service.icon as keyof typeof icons]; const illustration = serviceIllustrations[service.number]; return <article className="service-card" key={service.number}><div className="service-top"><Icon size={22} /></div><h3>{service.title}</h3>{illustration && <img className="service-illustration" src={illustration.src} alt={illustration.alt} />}<p>{service.description}</p><div className="tag-list">{service.tags.map((tag) => <span key={tag}>{tag}</span>)}</div></article>; })}
+        </div>
+      </div>
+      <button className="client-carousel-control services-carousel-control-next" type="button" aria-label="Show next service" title="Next service" onClick={() => advanceCarousel(trackRef.current, viewportRef.current, "normal", frameRef)}>
+        <ChevronRight size={19} aria-hidden="true" />
+      </button>
+    </div>
   </section>;
 }
 
@@ -550,10 +577,9 @@ export default function Home({ theme, toggleTheme }: HomeProps) {
       <main id="top">
         <section className="hero-section section-wrap" ref={heroSectionRef}>
           <div className="hero-copy">
-            <div className="availability"><span className="pulse-dot" /> Available for freelance projects</div>
-            <p className="hero-kicker">Muhammad Bilal · Excel VBA, VSTO & Office Automation Specialist · MBA in Finance</p>
-            <h1>Custom Excel Add-Ins,<br /><em>VBA Macros & Workflow Automation</em></h1><p className="hero-subhead">Built for enterprise speed & accuracy.</p>
-            <p className="hero-description">Helping businesses eliminate manual data entry, automate complex reports, and build professional desktop Office extensions.</p>
+            <h1>Turn Manual Workflows<br className="hero-title-break" />{" "}Into <em>One-Click</em> Automation</h1>
+            <p className="hero-subhead">Custom Dashboards, One-Click Add-Ins, Document Automation with VBA Macros</p>
+            <p className="hero-description">I build custom solutions that automate repetitive tasks, connect applications, streamline documents, and turn complex processes into simple one-click tools.</p>
             <div className="hero-actions hero-actions-stacked">
               <a className="button button-primary" href="#contact" onClick={(event) => smoothScrollTo(event, "contact")}><Send size={16} /> Start a Project <ArrowUpRight className="hero-action-arrow" size={15} /></a>
               <a className="button button-secondary hero-action-upwork" href="https://upwork.com/freelancers/muhammadbilal88" target="_blank" rel="noreferrer"><BriefcaseBusiness size={16} /> Hire on Upwork <ArrowUpRight className="hero-action-arrow" size={15} /></a>
@@ -564,7 +590,9 @@ export default function Home({ theme, toggleTheme }: HomeProps) {
           <div className="profile-visual">
             <div className="profile-photo-frame">
               <img src="/manus-storage/ChatGPT_6c7e1dbf.png" alt="Muhammad Bilal, freelance software and workflow automation developer" />
-              <div className="profile-label">⚡ Top Rated Automation Specialist</div>
+              <a className="profile-float-tag profile-tag-top-rated" href="#reviews" onClick={(event) => smoothScrollTo(event, "reviews")}><span aria-hidden="true">⚡</span><span className="profile-tag-copy"><strong>Muhammad Bilal</strong><small>Top Rated Automation Specialist</small></span></a>
+              <a className="profile-float-tag profile-tag-specialist" href="#services" onClick={(event) => smoothScrollTo(event, "services")}>Automation Specialist <ArrowUpRight size={13} aria-hidden="true" /></a>
+              <a className="profile-float-tag profile-tag-availability" href="#contact" onClick={(event) => smoothScrollTo(event, "contact")}><span className="pulse-dot" aria-hidden="true" /> Available for freelance projects</a>
             </div>
             <div className="profile-metrics" aria-label="Professional results">
               <div className="profile-metric"><strong>375+</strong><span>Commercial projects delivered</span></div>
