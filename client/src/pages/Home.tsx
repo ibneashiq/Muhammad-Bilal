@@ -577,16 +577,12 @@ export default function Home({ theme, toggleTheme }: HomeProps) {
       <main id="top">
         <section className="hero-section section-wrap" ref={heroSectionRef}>
           <div className="hero-copy">
-            <h1>Turn Your Workflows<br className="hero-title-break" /> into <em>Single-Click</em> Button</h1>
+            <h1>Turn Your Workflows<br className="hero-title-break" /> into <em>Single-Click</em> Add-in</h1>
             <p className="hero-subhead">Helpful Dashboards, One-Click Add-Ins, Document Automation</p>
             <p className="hero-description">I build custom solutions that automate repetitive tasks, connect applications, streamline documents, and turn complex processes into simple one-click tools.</p>
             <div className="hero-actions hero-actions-stacked">
-              <a className="button button-primary" href="#contact" onClick={(event) => smoothScrollTo(event, "contact")}><Send size={16} /> Connect <ArrowUpRight className="hero-action-arrow" size={15} /></a>
+              <a className="button button-primary" href="#contact" onClick={(event) => smoothScrollTo(event, "contact")}><Send size={16} /> Start a project <ArrowUpRight className="hero-action-arrow" size={15} /></a>
               <a className="button whatsapp-button" href="https://wa.me/923462116322" target="_blank" rel="noreferrer" aria-label="Let's Talk on WhatsApp"><MessageCircle size={17} /> Let's Talk <ArrowUpRight className="hero-action-arrow" size={15} /></a>
-              <div className="marketplace-actions" aria-label="Freelance marketplaces">
-                <a className="button button-secondary hero-action-upwork" href="https://upwork.com/freelancers/muhammadbilal88" target="_blank" rel="noreferrer" aria-label="Hire on Upwork"><span className="upwork-icon-wrap"><img className="marketplace-icon upwork-icon" src={upworkLogo} alt="" /></span><span className="marketplace-label" aria-hidden="true">Hire on Upwork</span><ArrowUpRight className="hero-action-arrow" size={15} aria-hidden="true" /></a>
-                <a className="button button-secondary hero-action-fiverr" href="https://www.fiverr.com/s/d0DyPYZ" target="_blank" rel="noreferrer" aria-label="Order on Fiverr"><img className="marketplace-icon fiverr-icon" src={fiverrLogo} alt="" /><span className="marketplace-label" aria-hidden="true">Order on Fiverr</span><ArrowUpRight className="hero-action-arrow" size={15} aria-hidden="true" /></a>
-              </div>
             </div>
           </div>
           <div className="profile-visual">
@@ -624,7 +620,7 @@ export default function Home({ theme, toggleTheme }: HomeProps) {
           <div className="contact-intro"><h2>Have a workflow<br /><em>worth fixing?</em></h2><p>Share the process, tools, and timeline. I will come back with a practical route to a faster, more accurate workflow.</p><div className="quick-connect" aria-label="Quick connect options">
               <div className="email-connect"><span className="channel-logo channel-gmail"><Mail size={16} /></span><span className="email-copy"><strong>Direct Email</strong><small>ibn.e.ashiq@gmail.com</small></span><a className="email-open" href="mailto:ibn.e.ashiq@gmail.com">Email <ArrowUpRight size={13} /></a><button type="button" className="copy-email" onClick={copyEmail}>{copiedEmail ? <><Check size={14} /> Copied</> : <><Clipboard size={14} /> Copy</>}</button></div>
               <a className="contact-channel whatsapp-contact" href="https://wa.me/923462116322" target="_blank" rel="noreferrer"><span className="channel-logo channel-whatsapp"><MessageCircle size={16} /></span><span><strong>WhatsApp me</strong><small>+92 346 2116322 · fastest reply</small></span><ArrowUpRight size={15} /></a>
-              <div className="contact-marketplace-row"><a className="contact-channel" href="https://upwork.com/freelancers/muhammadbilal88" target="_blank" rel="noreferrer"><span className="channel-logo channel-upwork">U</span><span><strong>Upwork</strong><small>Direct hire</small></span><ArrowUpRight size={15} /></a><a className="contact-channel" href="https://www.fiverr.com/s/d0DyPYZ" target="_blank" rel="noreferrer"><span className="channel-logo channel-fiverr">F</span><span><strong>Fiverr</strong><small>Direct order</small></span><ArrowUpRight size={15} /></a></div>
+              <div className="contact-marketplace-row"><a className="contact-channel" href="https://upwork.com/freelancers/muhammadbilal88" target="_blank" rel="noreferrer"><span className="channel-logo channel-upwork"><span className="upwork-icon-wrap"><img className="marketplace-icon upwork-icon" src={upworkLogo} alt="" /></span></span><span><strong>Upwork</strong><small>Direct hire</small></span><ArrowUpRight size={15} /></a><a className="contact-channel" href="https://www.fiverr.com/s/d0DyPYZ" target="_blank" rel="noreferrer"><span className="channel-logo channel-fiverr"><img className="marketplace-icon fiverr-icon" src={fiverrLogo} alt="" /></span><span><strong>Fiverr</strong><small>Direct order</small></span><ArrowUpRight size={15} /></a></div>
             </div></div>
           <div className="form-card">
             {submitted ? <div className="success-state"><span className="success-icon"><Check size={22} /></span><h3>Message received.</h3><p>Thanks — you will be contacted shortly with possible options and a practical solution.</p><button className="text-link" type="button" onClick={() => setSubmitted(false)}>Send another message <ArrowUpRight size={16} /></button></div> : <form onSubmit={handleSubmit}>
