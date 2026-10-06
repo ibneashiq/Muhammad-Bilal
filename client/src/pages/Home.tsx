@@ -2,7 +2,6 @@ import {
   ArrowDownRight,
   BarChart3,
   ArrowUpRight,
-  BriefcaseBusiness,
   ChevronLeft,
   ChevronRight,
   ChevronUp,
@@ -23,7 +22,6 @@ import {
   Play,
   Quote,
   Send,
-  ShoppingBag,
   Sparkles,
   Sun,
   Waves,
@@ -34,6 +32,8 @@ import {
 import { FormEvent, MouseEvent, useEffect, useRef, useState } from "react";
 import serviceDashboardImage from "../assets/service-financial-dashboards.jpg";
 import serviceAddinImage from "../assets/service-excel-addins.jpg";
+import upworkLogo from "../assets/upwork-icon.svg";
+import fiverrLogo from "../assets/fiverr-icon.jpg";
 
 type Theme = "light" | "dark" | "warm" | "cool";
 type CarouselDirection = "normal" | "reverse";
@@ -582,9 +582,9 @@ export default function Home({ theme, toggleTheme }: HomeProps) {
             <p className="hero-description">I build custom solutions that automate repetitive tasks, connect applications, streamline documents, and turn complex processes into simple one-click tools.</p>
             <div className="hero-actions hero-actions-stacked">
               <a className="button button-primary" href="#contact" onClick={(event) => smoothScrollTo(event, "contact")}><Send size={16} /> Start a Project <ArrowUpRight className="hero-action-arrow" size={15} /></a>
-              <a className="button button-secondary hero-action-upwork" href="https://upwork.com/freelancers/muhammadbilal88" target="_blank" rel="noreferrer"><BriefcaseBusiness size={16} /> Hire on Upwork <ArrowUpRight className="hero-action-arrow" size={15} /></a>
-              <a className="button button-secondary hero-action-fiverr" href="https://www.fiverr.com/s/d0DyPYZ" target="_blank" rel="noreferrer"><ShoppingBag size={16} /> Order on Fiverr <ArrowUpRight className="hero-action-arrow" size={15} /></a>
               <a className="button whatsapp-button" href="https://wa.me/923462116322" target="_blank" rel="noreferrer"><MessageCircle size={17} /> WhatsApp me <ArrowUpRight className="hero-action-arrow" size={15} /></a>
+              <a className="button button-secondary hero-action-upwork" href="https://upwork.com/freelancers/muhammadbilal88" target="_blank" rel="noreferrer" aria-label="Hire on Upwork"><span className="upwork-icon-wrap"><img className="marketplace-icon upwork-icon" src={upworkLogo} alt="" /></span><span className="marketplace-label" aria-hidden="true">Hire on Upwork</span><ArrowUpRight className="hero-action-arrow" size={15} aria-hidden="true" /></a>
+              <a className="button button-secondary hero-action-fiverr" href="https://www.fiverr.com/s/d0DyPYZ" target="_blank" rel="noreferrer" aria-label="Order on Fiverr"><img className="marketplace-icon fiverr-icon" src={fiverrLogo} alt="" /><span className="marketplace-label" aria-hidden="true">Order on Fiverr</span><ArrowUpRight className="hero-action-arrow" size={15} aria-hidden="true" /></a>
             </div>
           </div>
           <div className="profile-visual">
