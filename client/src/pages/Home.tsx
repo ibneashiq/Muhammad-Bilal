@@ -577,14 +577,16 @@ export default function Home({ theme, toggleTheme }: HomeProps) {
       <main id="top">
         <section className="hero-section section-wrap" ref={heroSectionRef}>
           <div className="hero-copy">
-            <h1>Turn Manual Workflows<br className="hero-title-break" />{" "}Into <em>One-Click</em> Automation</h1>
-            <p className="hero-subhead">Custom Dashboards, One-Click Add-Ins, Document Automation with VBA Macros</p>
+            <h1>Turn Your Workflows<br className="hero-title-break" /> into <em>Single-Click</em> Button</h1>
+            <p className="hero-subhead">Helpful Dashboards, One-Click Add-Ins, Document Automation</p>
             <p className="hero-description">I build custom solutions that automate repetitive tasks, connect applications, streamline documents, and turn complex processes into simple one-click tools.</p>
             <div className="hero-actions hero-actions-stacked">
-              <a className="button button-primary" href="#contact" onClick={(event) => smoothScrollTo(event, "contact")}><Send size={16} /> Start a Project <ArrowUpRight className="hero-action-arrow" size={15} /></a>
-              <a className="button whatsapp-button" href="https://wa.me/923462116322" target="_blank" rel="noreferrer"><MessageCircle size={17} /> WhatsApp me <ArrowUpRight className="hero-action-arrow" size={15} /></a>
-              <a className="button button-secondary hero-action-upwork" href="https://upwork.com/freelancers/muhammadbilal88" target="_blank" rel="noreferrer" aria-label="Hire on Upwork"><span className="upwork-icon-wrap"><img className="marketplace-icon upwork-icon" src={upworkLogo} alt="" /></span><span className="marketplace-label" aria-hidden="true">Hire on Upwork</span><ArrowUpRight className="hero-action-arrow" size={15} aria-hidden="true" /></a>
-              <a className="button button-secondary hero-action-fiverr" href="https://www.fiverr.com/s/d0DyPYZ" target="_blank" rel="noreferrer" aria-label="Order on Fiverr"><img className="marketplace-icon fiverr-icon" src={fiverrLogo} alt="" /><span className="marketplace-label" aria-hidden="true">Order on Fiverr</span><ArrowUpRight className="hero-action-arrow" size={15} aria-hidden="true" /></a>
+              <a className="button button-primary" href="#contact" onClick={(event) => smoothScrollTo(event, "contact")}><Send size={16} /> Connect <ArrowUpRight className="hero-action-arrow" size={15} /></a>
+              <a className="button whatsapp-button" href="https://wa.me/923462116322" target="_blank" rel="noreferrer" aria-label="Let's Talk on WhatsApp"><MessageCircle size={17} /> Let's Talk <ArrowUpRight className="hero-action-arrow" size={15} /></a>
+              <div className="marketplace-actions" aria-label="Freelance marketplaces">
+                <a className="button button-secondary hero-action-upwork" href="https://upwork.com/freelancers/muhammadbilal88" target="_blank" rel="noreferrer" aria-label="Hire on Upwork"><span className="upwork-icon-wrap"><img className="marketplace-icon upwork-icon" src={upworkLogo} alt="" /></span><span className="marketplace-label" aria-hidden="true">Hire on Upwork</span><ArrowUpRight className="hero-action-arrow" size={15} aria-hidden="true" /></a>
+                <a className="button button-secondary hero-action-fiverr" href="https://www.fiverr.com/s/d0DyPYZ" target="_blank" rel="noreferrer" aria-label="Order on Fiverr"><img className="marketplace-icon fiverr-icon" src={fiverrLogo} alt="" /><span className="marketplace-label" aria-hidden="true">Order on Fiverr</span><ArrowUpRight className="hero-action-arrow" size={15} aria-hidden="true" /></a>
+              </div>
             </div>
           </div>
           <div className="profile-visual">

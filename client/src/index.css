@@ -125,7 +125,8 @@ h1 em, h2 em { color: var(--muted); font-style: normal; }
 .profile-photo-frame::after { content: ""; position: absolute; inset: 0; border-radius: inherit; background: linear-gradient(145deg, transparent 44%, rgba(184,242,62,.18)); pointer-events: none; }
 .profile-photo-frame img { width: 100%; height: 100%; display: block; border-radius: inherit; object-fit: cover; object-position: center top; filter: grayscale(1) contrast(1.06); }
 .profile-metrics { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; width: min(100%, 475px); }
-.profile-metric { min-width: 0; padding: 14px 12px; border: 1px solid color-mix(in srgb, var(--metric-accent) 24%, transparent); border-radius: 14px; background: color-mix(in srgb, var(--metric-accent) 9%, var(--surface)); }
+.profile-metric { position: relative; min-width: 0; padding: 14px 12px; border: 1px solid color-mix(in srgb, var(--metric-accent) 24%, transparent); border-radius: 14px; background: color-mix(in srgb, var(--metric-accent) 9%, var(--surface)); transition: transform 240ms cubic-bezier(.23,1,.32,1), border-color 180ms ease, background 180ms ease, box-shadow 240ms ease; }
+.profile-metric:hover { z-index: 1; transform: translateY(-7px) scale(1.035); border-color: color-mix(in srgb, var(--metric-accent) 58%, var(--line)); background: color-mix(in srgb, var(--metric-accent) 14%, var(--surface)); box-shadow: 0 16px 32px color-mix(in srgb, var(--metric-accent) 22%, transparent); }
 .profile-metric:nth-child(1) { --metric-accent: #548b16; }
 .profile-metric:nth-child(2) { --metric-accent: #087ba8; }
 .profile-metric:nth-child(3) { --metric-accent: #7046aa; }
@@ -232,16 +233,17 @@ h1 em, h2 em { color: var(--muted); font-style: normal; }
 .upwork-icon { width: 66px; max-width: none; height: 20px; }
 .fiverr-icon { width: 25px; height: 25px; border-radius: 50%; object-fit: cover; object-position: center; }
 .marketplace-label { overflow: hidden; max-width: 0; opacity: 0; white-space: nowrap; transition: max-width 260ms ease, opacity 160ms ease; }
-.hero-actions-stacked .hero-action-upwork,
-.hero-actions-stacked .hero-action-fiverr { justify-self: start; width: 62px; justify-content: center; overflow: hidden; padding: 12px; transition: width 260ms cubic-bezier(.23,1,.32,1), transform 160ms cubic-bezier(.23,1,.32,1), box-shadow 180ms ease, background 180ms ease; }
-.hero-actions-stacked .hero-action-upwork:hover,
-.hero-actions-stacked .hero-action-upwork:focus-visible,
-.hero-actions-stacked .hero-action-fiverr:hover,
-.hero-actions-stacked .hero-action-fiverr:focus-visible { width: 100%; justify-content: flex-start; }
-.hero-actions-stacked .hero-action-upwork:hover .marketplace-label,
-.hero-actions-stacked .hero-action-upwork:focus-visible .marketplace-label,
-.hero-actions-stacked .hero-action-fiverr:hover .marketplace-label,
-.hero-actions-stacked .hero-action-fiverr:focus-visible .marketplace-label { max-width: 140px; opacity: 1; }
+.marketplace-actions { grid-column: 1 / -1; display: flex; width: min(100%, 320px); gap: 10px; }
+.hero-actions-stacked .marketplace-actions > .hero-action-upwork,
+.hero-actions-stacked .marketplace-actions > .hero-action-fiverr { width: auto; min-width: 0; flex: 0 0 62px; justify-content: center; overflow: hidden; padding: 12px; transition: flex-basis 260ms cubic-bezier(.23,1,.32,1), transform 160ms cubic-bezier(.23,1,.32,1), box-shadow 180ms ease, background 180ms ease; }
+.hero-actions-stacked .marketplace-actions > .hero-action-upwork:hover,
+.hero-actions-stacked .marketplace-actions > .hero-action-upwork:focus-visible,
+.hero-actions-stacked .marketplace-actions > .hero-action-fiverr:hover,
+.hero-actions-stacked .marketplace-actions > .hero-action-fiverr:focus-visible { flex-basis: 240px; justify-content: flex-start; }
+.hero-actions-stacked .marketplace-actions > .hero-action-upwork:hover .marketplace-label,
+.hero-actions-stacked .marketplace-actions > .hero-action-upwork:focus-visible .marketplace-label,
+.hero-actions-stacked .marketplace-actions > .hero-action-fiverr:hover .marketplace-label,
+.hero-actions-stacked .marketplace-actions > .hero-action-fiverr:focus-visible .marketplace-label { max-width: 140px; opacity: 1; }
 .hero-actions-stacked .button-primary > svg:first-child { color: var(--lime-ink); }
 .hero-actions-stacked .whatsapp-button > svg:first-child { color: #087a3c; }
 .button-secondary { border: 1px solid var(--line-strong); background: var(--surface); color: var(--ink); }
@@ -561,8 +563,8 @@ html {
 }
 
 .hero-actions-stacked {
-  width: min(100%, 500px);
-  max-width: 500px;
+  width: min(100%, 360px);
+  max-width: 360px;
 }
 
 .hero-actions-stacked .button {
@@ -710,18 +712,22 @@ html {
 @media (max-width: 720px) {
   .hero-actions-stacked {
     top: 0;
+    grid-template-columns: minmax(0, 1fr);
   }
 
-  .hero-actions-stacked .hero-action-upwork,
-  .hero-actions-stacked .hero-action-fiverr {
-    width: 62px;
-  }
-
-  .hero-actions-stacked .hero-action-upwork:hover,
-  .hero-actions-stacked .hero-action-upwork:focus-visible,
-  .hero-actions-stacked .hero-action-fiverr:hover,
-  .hero-actions-stacked .hero-action-fiverr:focus-visible {
+  .hero-actions-stacked .marketplace-actions {
     width: 100%;
+  }
+
+  .profile-metric:hover {
+    transform: translateY(-4px) scale(1.02);
+  }
+
+  .hero-actions-stacked .marketplace-actions > .hero-action-upwork:hover,
+  .hero-actions-stacked .marketplace-actions > .hero-action-upwork:focus-visible,
+  .hero-actions-stacked .marketplace-actions > .hero-action-fiverr:hover,
+  .hero-actions-stacked .marketplace-actions > .hero-action-fiverr:focus-visible {
+    flex-basis: 240px;
   }
 
   .hero-copy h1 {
