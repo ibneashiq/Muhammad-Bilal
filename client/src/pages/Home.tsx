@@ -32,6 +32,8 @@ import {
 import { FormEvent, MouseEvent, useEffect, useRef, useState } from "react";
 import serviceDashboardImage from "../assets/service-financial-dashboards.jpg";
 import serviceAddinImage from "../assets/service-excel-addins.jpg";
+import globalReachGif from "../assets/global-reach.gif";
+import globalReachPoster from "../assets/global-reach-poster.jpg";
 import upworkLogo from "../assets/upwork-icon.svg";
 import fiverrLogo from "../assets/fiverr-icon.jpg";
 
@@ -268,6 +270,23 @@ function FeaturedClients() {
           </button>
         </div>
       </div>
+    </section>
+  );
+}
+
+function GlobalReachSection() {
+  return (
+    <section className="global-reach section-wrap" id="global-reach" aria-labelledby="global-reach-heading">
+      <div className="global-reach-heading">
+        <p className="section-index">Worldwide reach</p>
+        <h2 id="global-reach-heading">Trusted beyond<br /><em>borders.</em></h2>
+      </div>
+      <figure className="global-reach-visual" aria-hidden="true">
+        <picture>
+          <source media="(prefers-reduced-motion: reduce)" srcSet={globalReachPoster} />
+          <img className="global-reach-map" src={globalReachGif} alt="" loading="lazy" decoding="async" />
+        </picture>
+      </figure>
     </section>
   );
 }
@@ -589,18 +608,20 @@ export default function Home({ theme, toggleTheme }: HomeProps) {
             <div className="profile-photo-frame">
               <img src="/manus-storage/ChatGPT_6c7e1dbf.png" alt="Muhammad Bilal, freelance software and workflow automation developer" />
               <a className="profile-float-tag profile-tag-top-rated" href="#reviews" onClick={(event) => smoothScrollTo(event, "reviews")}><span aria-hidden="true">⚡</span><span className="profile-tag-copy"><strong>Muhammad Bilal</strong><small>Top Rated Automation Specialist</small></span></a>
-              <a className="profile-float-tag profile-tag-specialist" href="#services" onClick={(event) => smoothScrollTo(event, "services")}>Automation Specialist <ArrowUpRight size={13} aria-hidden="true" /></a>
-              <a className="profile-float-tag profile-tag-availability" href="#contact" onClick={(event) => smoothScrollTo(event, "contact")}><span className="pulse-dot" aria-hidden="true" /> Available for freelance projects</a>
+              <a className="profile-float-tag profile-tag-specialist" href="#services" onClick={(event) => smoothScrollTo(event, "services")}><span className="pulse-dot" aria-hidden="true" /> Automation Specialist <ArrowUpRight size={13} aria-hidden="true" /></a>
+              <a className="profile-float-tag profile-tag-availability" href="#contact" onClick={(event) => smoothScrollTo(event, "contact")}><span className="profile-online-dot" aria-hidden="true" /> Available</a>
             </div>
             <div className="profile-metrics" aria-label="Professional results">
               <div className="profile-metric"><strong>375+</strong><span>Commercial projects delivered</span></div>
-              <div className="profile-metric"><strong>175+</strong><span>International clients</span></div>
+              <a className="profile-metric" href="#global-reach" onClick={(event) => smoothScrollTo(event, "global-reach")} aria-label="175 plus international clients. Explore global reach"><strong>175+</strong><span>International clients</span></a>
               <div className="profile-metric"><strong>100%</strong><span>Job Success Rate</span></div>
             </div>
           </div>
         </section>
 
         <FeaturedClients />
+
+        <GlobalReachSection />
 
         <ServicesSection />
 
