@@ -21,17 +21,24 @@ import {
   Palette,
   Play,
   Quote,
-  Send,
   Sparkles,
   Sun,
   Waves,
   Youtube,
   Workflow,
   X,
+  ZoomIn,
 } from "lucide-react";
 import { FormEvent, MouseEvent, useEffect, useRef, useState } from "react";
+import { WorldDominationMap } from "../components/WorldDominationMap";
 import serviceDashboardImage from "../assets/service-financial-dashboards.jpg";
 import serviceAddinImage from "../assets/service-excel-addins.jpg";
+import serviceDocAutomationImage from "../assets/service-document-automation.jpg";
+import projectGeotechImage from "../assets/project-geotech-tool.jpg";
+import projectBarcodeImage from "../assets/project-barcode-merge.jpg";
+import projectWordAddinImage from "../assets/project-word-addin.jpg";
+import projectFinanceImage from "../assets/project-finance-pipeline.jpg";
+import workflowSystemImage from "../assets/workflow-pipeline-system.jpg";
 import globalReachGif from "../assets/global-reach.gif";
 import globalReachPoster from "../assets/global-reach-poster.jpg";
 import upworkLogo from "../assets/upwork-icon.svg";
@@ -45,8 +52,8 @@ type HomeProps = {
   toggleTheme: () => void;
 };
 
-// PROJECT CONTENT: Replace the sample copy, metrics, and review text with your
-// real client work. Keep the structure so each case study stays scannable.
+// FEATURED PROJECTS: Real enterprise automation systems and custom desktop tools
+// built for international clients with verified production impacts.
 const projects = [
   {
     number: "01",
@@ -57,7 +64,11 @@ const projects = [
     impact: "Cut report preparation from hours to under 5 minutes with 100% calculation consistency.",
     tags: ["Excel VBA", "UserForms", "PDF Publishing", "Engineering"],
     accent: "lime",
-    visual: "dashboard",
+    image: projectGeotechImage,
+    alt: "Melbourne Geotech Excel calculation system with custom ribbon, borehole soil analysis UserForm, and PDF report export",
+    label: "GeotechSoilAnalysis_BH102.xlsm",
+    code: "CalculateBoreholeBearingCapacity()",
+    badge: "PRODUCTION ADD-IN",
     review: "Outstanding experience working with MBA. Exceptional attention to detail, seamless communication, and top-notch quality.",
     reviewer: "Fiverr client · United Kingdom",
   },
@@ -70,7 +81,11 @@ const projects = [
     impact: "Reduced turnaround time by 80% and earned a client bonus on Upwork for exceptional execution.",
     tags: ["Word VBA", "Excel VBA", "EAN / Barcode", "Mail Merge"],
     accent: "blue",
-    visual: "word",
+    image: projectBarcodeImage,
+    alt: "Kalpa NL automated Word and Excel mail merge system with live EAN-13 barcode generator and packaging labels",
+    label: "Kalpa_EAN13_BarcodeMerge.docm",
+    code: "GenerateEAN13BarcodeLabels()",
+    badge: "HIGH-SPEED PIPELINE",
     review: "He was professional, responsive, and accommodating. He understood my needs and created the right solution to meet them.",
     reviewer: "Upwork client · Netherlands",
   },
@@ -83,7 +98,11 @@ const projects = [
     impact: "Successfully deployed the update with zero regressions reported by active end-users.",
     tags: ["Word VBA", "Debugging", "Text Processing", "Add-in QA"],
     accent: "orange",
-    visual: "macro",
+    image: projectWordAddinImage,
+    alt: "Scriptomat enterprise Microsoft Word add-in stabilization with custom ribbon, regex text replacement, and zero regression QA console",
+    label: "Scriptomat_Enterprise_v4.dotm",
+    code: "RunStabilizationScan()",
+    badge: "CROSS-PLATFORM QA 100%",
     review: "I thought my issues with using Word for Mac would be difficult, but he figured out how to make it work. He exceeded expectations.",
     reviewer: "Fiverr client · United States",
   },
@@ -96,7 +115,11 @@ const projects = [
     impact: "Replaced 10+ hours of weekly manual bookkeeping with dependable automated validation.",
     tags: ["Excel BI", "Power Query", "QuickBooks", "Audit Checks"],
     accent: "violet",
-    visual: "console",
+    image: projectFinanceImage,
+    alt: "Executive financial dashboard with QuickBooks API integration, multi-ledger reconciliation, and Power Query ETL pipeline",
+    label: "ExecutiveFinancialAnalytics_BI.xlsx",
+    code: "ReconcileQuickBooksLedger()",
+    badge: "AUTOMATED RECONCILIATION",
     review: "Thank you very much Muhammad.",
     reviewer: "Upwork client · 5.0/5 review",
   },
@@ -111,6 +134,7 @@ const services = [
 const serviceIllustrations: Record<string, { src: string; alt: string }> = {
   "01": { src: serviceAddinImage, alt: "Excel add-in development, custom tools, and data automation illustration" },
   "02": { src: serviceDashboardImage, alt: "Business dashboard, financial reporting, and secure workflow illustration" },
+  "03": { src: serviceDocAutomationImage, alt: "Word document assembly, mail merge pipeline, and dynamic barcode automation illustration" },
 };
 
 type ClientLogo = { name: string; src: string; country?: string; flag?: string };
@@ -143,7 +167,9 @@ function getAssetName(filePath: string) {
   return fileName
     .replace(/\.[^.]+$/, "")
     .replace(/[-_]+/g, " ")
-    .split(" ")
+    .trim()
+    .split(/\s+/)
+    .filter(Boolean)
     .map((word) => word.toLowerCase() === "gmbh" ? "GmbH" : `${word[0].toUpperCase()}${word.slice(1)}`)
     .join(" ");
 }
@@ -291,85 +317,131 @@ function GlobalReachSection() {
   );
 }
 
-function AutomationGraphic() {
+function ApproachSection({ onOpenVisual }: { onOpenVisual: () => void }) {
   return (
-    <div className="automation-graphic" aria-label="Illustration of connected business automation steps">
-      <div className="graphic-scanline" />
-      <div className="graphic-caption">
-        <span className="pulse-dot" />
-        AUTOMATION SYSTEM / ONLINE
+    <section className="approach-section" id="approach" aria-labelledby="approach-heading">
+      <div className="section-wrap approach-grid">
+        <div className="approach-intro">
+          <h2 id="approach-heading">From manual bottlenecks<br /><em>to single-click tools.</em></h2>
+          <p>
+            Office workflows fail when they rely on error-prone manual copy-pasting, brittle ad-hoc macros, or untracked versions. I engineer institutional-grade add-ins with strict schema validation, defensive error recovery, and seamless native Ribbon interfaces.
+          </p>
+          <div
+            className="approach-visual-container"
+            role="button"
+            tabIndex={0}
+            onClick={onOpenVisual}
+            onKeyDown={(e) => {
+              if (e.key === "Enter" || e.key === " ") {
+                e.preventDefault();
+                onOpenVisual();
+              }
+            }}
+            aria-label="Inspect the full workflow automation pipeline architecture diagram"
+          >
+            <img
+              src={workflowSystemImage}
+              alt="Complete end-to-end office workflow automation architecture diagram by Muhammad Bilal"
+              className="approach-visual-img"
+              loading="lazy"
+            />
+            <div className="approach-visual-caption">
+              <span>
+                <span className="live-dot" /> End-to-End Enterprise System Architecture
+              </span>
+              <span className="approach-visual-badge">
+                <ZoomIn size={12} /> Inspect Diagram
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <div className="approach-list">
+          <div className="approach-item">
+            <span>01</span>
+            <div>
+              <h3>Discovery & Data Modeling</h3>
+              <p>Audit existing spreadsheets, ERP exports, and Word templates. Map every edge-case calculation, accounting rule, and data dependency before writing a single line of code.</p>
+            </div>
+          </div>
+          <div className="approach-item">
+            <span>02</span>
+            <div>
+              <h3>Defensive C# VSTO & VBA Code</h3>
+              <p>Construct modular components with typed data models, dedicated error handlers, and intuitive UserForm interfaces. No silent macro failures or corrupted workbooks.</p>
+            </div>
+          </div>
+          <div className="approach-item">
+            <span>03</span>
+            <div>
+              <h3>Cross-Platform Rigorous QA</h3>
+              <p>Test across Windows 10/11 and macOS Office environments. Validate zero-regression performance against large batch sizes (thousands of packaging barcodes or ledger rows).</p>
+            </div>
+          </div>
+          <div className="approach-item">
+            <span>04</span>
+            <div>
+              <h3>One-Click Deployment & PDF Output</h3>
+              <p>Deliver self-contained add-ins with branded Ribbon tabs. End-users press a single button to validate inputs, compute outputs, and generate boardroom-ready PDFs in seconds.</p>
+            </div>
+          </div>
+        </div>
       </div>
-      <div className="node node-source">
-        <span className="node-kicker">INPUT</span>
-        <strong>Excel</strong>
-        <small>raw operations data</small>
-      </div>
-      <div className="node node-process">
-        <span className="node-kicker">PROCESS</span>
-        <Workflow size={18} />
-        <strong>Rules + logic</strong>
-        <small>clean / validate / route</small>
-      </div>
-      <div className="node node-output">
-        <span className="node-kicker">OUTPUT</span>
-        <Sparkles size={18} />
-        <strong>Better decisions</strong>
-        <small>reports people trust</small>
-      </div>
-      <svg className="graphic-lines" viewBox="0 0 540 370" fill="none" aria-hidden="true">
-        <path d="M167 164H201C214 164 221 157 221 144V110H246" />
-        <path d="M361 110H392C409 110 409 179 426 179H455" />
-        <path d="M361 225H393C410 225 410 179 426 179" />
-        <circle cx="221" cy="144" r="4" />
-        <circle cx="410" cy="179" r="4" />
-      </svg>
-      <div className="graphic-footer">
-        <span>VBA</span><span>C#</span><span>OFFICE.JS</span><span>BI</span>
-      </div>
-    </div>
+    </section>
   );
 }
 
-function VideoPlaceholder({ visual, accent }: { visual: string; accent: string }) {
-  const visualCopy: Record<string, { label: string; code: string }> = {
-    dashboard: { label: "dashboard-preview.xlsx", code: "refresh_kpis()" },
-    word: { label: "word-addin / review", code: "InsertApprovedBlock()" },
-    macro: { label: "data-cleaner.xlsm", code: "MapColumns → Export" },
-    console: { label: "ops-console.exe", code: "RunBatchJob()" },
-  };
-  const copy = visualCopy[visual];
-
+function ProjectVisual({
+  project,
+  onOpen,
+}: {
+  project: (typeof projects)[number];
+  onOpen: (project: (typeof projects)[number]) => void;
+}) {
   return (
-    <div className={`video-placeholder video-${accent}`}>
-      {/* VIDEO DROP ZONE: Replace this entire placeholder with a <video> tag or
-          a Loom/Vimeo embed. Keep the .video-frame aspect ratio for consistency. */}
+    <div
+      className={`video-placeholder video-${project.accent} project-preview-container`}
+      role="button"
+      tabIndex={0}
+      onClick={() => onOpen(project)}
+      onKeyDown={(event) => {
+        if (event.key === "Enter" || event.key === " ") {
+          event.preventDefault();
+          onOpen(project);
+        }
+      }}
+      aria-label={`Inspect full resolution system preview for ${project.title}`}
+    >
       <div className="video-topbar">
-        <span className="window-dots"><i /><i /><i /></span>
-        <span>{copy.label}</span>
-        <span className="video-time">00:00 / 01:24</span>
+        <span className="window-dots">
+          <i />
+          <i />
+          <i />
+        </span>
+        <span className="project-window-filename">{project.label}</span>
+        <span className="project-status-tag">{project.badge}</span>
       </div>
-      <div className="video-frame">
-        {visual === "dashboard" && (
-          <div className="mini-dashboard">
-            <div className="mini-kpi-row"><span /><span /><span /></div>
-            <div className="mini-chart"><i /><i /><i /><i /><i /><i /></div>
-            <div className="mini-table"><span /><span /><span /><span /></div>
-          </div>
-        )}
-        {visual === "word" && (
-          <div className="mini-document"><div className="mini-toolbar"><b /> <b /> <b /> <b /></div><span className="doc-line wide" /><span className="doc-line" /><span className="doc-line medium" /><span className="doc-highlight" /><span className="doc-line wide" /><span className="doc-line short" /></div>
-        )}
-        {visual === "macro" && (
-          <div className="mini-code"><span><em>01</em> Sub ProcessFiles()</span><span><em>02</em> CleanColumns ws</span><span><em>03</em> MapHeaders source</span><span className="code-active"><em>04</em> ExportReadyFile</span><span><em>05</em> End Sub</span></div>
-        )}
-        {visual === "console" && (
-          <div className="mini-console"><span><b>●</b> batch_042 / complete</span><span><b>●</b> batch_043 / running</span><span><b>●</b> batch_044 / queued</span><div className="console-progress"><i /></div></div>
-        )}
-        <button className="play-button" type="button" aria-label={`Play ${copy.label} demo`}>
-          <Play fill="currentColor" size={17} />
-        </button>
+      <div className="video-frame project-media-frame">
+        <img
+          src={project.image}
+          alt={project.alt}
+          className="project-screenshot"
+          loading="lazy"
+        />
+        <div className="project-hover-backdrop">
+          <span className="project-inspect-pill">
+            <ZoomIn size={15} />
+            <span>Click to inspect preview</span>
+          </span>
+        </div>
       </div>
-      <div className="video-caption"><span><span className="live-dot" /> DEMO PLACEHOLDER</span><span>{copy.code}</span></div>
+      <div className="video-caption">
+        <span className="project-caption-left">
+          <span className="live-dot" />
+          <span>Active Module</span>
+        </span>
+        <span className="project-code-snippet">{project.code}</span>
+      </div>
     </div>
   );
 }
@@ -444,7 +516,13 @@ function ReviewGallery({ onOpen }: { onOpen: (review: ReviewScreenshot) => void 
   );
 }
 
-function ProjectCard({ project }: { project: (typeof projects)[number] }) {
+function ProjectCard({
+  project,
+  onOpen,
+}: {
+  project: (typeof projects)[number];
+  onOpen: (project: (typeof projects)[number]) => void;
+}) {
   return (
     <article className="project-card">
       <div className="project-card-header">
@@ -452,7 +530,7 @@ function ProjectCard({ project }: { project: (typeof projects)[number] }) {
         <span className="project-eyebrow">{project.eyebrow}</span>
         <ArrowUpRight className="project-arrow" size={20} />
       </div>
-      <VideoPlaceholder visual={project.visual} accent={project.accent} />
+      <ProjectVisual project={project} onOpen={onOpen} />
       <div className="project-copy">
         <h3>{project.title}</h3>
         <div className="case-study-details">
@@ -485,6 +563,8 @@ export default function Home({ theme, toggleTheme }: HomeProps) {
   const [submitError, setSubmitError] = useState("");
   const [copiedEmail, setCopiedEmail] = useState(false);
   const [selectedReview, setSelectedReview] = useState<ReviewScreenshot | null>(null);
+  const [selectedProject, setSelectedProject] = useState<(typeof projects)[number] | null>(null);
+  const [selectedArchitecture, setSelectedArchitecture] = useState(false);
 
   const validateEmail = (value: string) => {
     if (!value) return "Email is required.";
@@ -560,13 +640,22 @@ export default function Home({ theme, toggleTheme }: HomeProps) {
   }, []);
 
   useEffect(() => {
-    if (!selectedReview) return;
-    const handleKeyDown = (event: KeyboardEvent) => { if (event.key === "Escape") setSelectedReview(null); };
+    if (!selectedReview && !selectedProject && !selectedArchitecture) return;
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        setSelectedReview(null);
+        setSelectedProject(null);
+        setSelectedArchitecture(false);
+      }
+    };
     document.addEventListener("keydown", handleKeyDown);
     const previousOverflow = document.body.style.overflow;
     document.body.style.overflow = "hidden";
-    return () => { document.removeEventListener("keydown", handleKeyDown); document.body.style.overflow = previousOverflow; };
-  }, [selectedReview]);
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown);
+      document.body.style.overflow = previousOverflow;
+    };
+  }, [selectedReview, selectedProject, selectedArchitecture]);
 
   return (
     <div className="site-shell">
@@ -581,6 +670,7 @@ export default function Home({ theme, toggleTheme }: HomeProps) {
         <nav className={`site-nav ${menuOpen ? "is-open" : ""}`} aria-label="Main navigation">
           <a href="#featured-clients" onClick={(event) => smoothScrollTo(event, "featured-clients")}>Clients</a>
           <a href="#services" onClick={(event) => smoothScrollTo(event, "services")}>Services</a>
+          <a href="#approach" onClick={(event) => smoothScrollTo(event, "approach")}>Architecture</a>
           <a href="#reviews" onClick={(event) => smoothScrollTo(event, "reviews")}>Reviews</a>
           <a href="#work" onClick={(event) => smoothScrollTo(event, "work")}>Work</a>
           <a href="#contact" onClick={(event) => smoothScrollTo(event, "contact")}>Contact</a>
@@ -596,13 +686,29 @@ export default function Home({ theme, toggleTheme }: HomeProps) {
       <main id="top">
         <section className="hero-section section-wrap" ref={heroSectionRef}>
           <div className="hero-copy">
-            <h1>Turn Your Workflows<br className="hero-title-break" /> into <em>Single-Click</em> Add-in</h1>
-            <p className="hero-subhead">Helpful Dashboards, One-Click Add-Ins, Document Automation</p>
-            <p className="hero-description">I build custom solutions that automate repetitive tasks, connect applications, streamline documents, and turn complex processes into simple one-click tools.</p>
-            <div className="hero-actions hero-actions-stacked">
-              <a className="button button-primary" href="#contact" onClick={(event) => smoothScrollTo(event, "contact")}><Send size={16} /> Start a project <ArrowUpRight className="hero-action-arrow" size={15} /></a>
-              <a className="button whatsapp-button" href="https://wa.me/923462116322" target="_blank" rel="noreferrer" aria-label="Let's Talk on WhatsApp"><MessageCircle size={17} /> Let's Talk <ArrowUpRight className="hero-action-arrow" size={15} /></a>
+            <h1>Turn Your Workflows<br className="hero-title-break" /> into <em
+              className="single-click-highlight"
+              onPointerMove={(event) => {
+                const bounds = event.currentTarget.getBoundingClientRect();
+                event.currentTarget.style.setProperty("--pointer-x", `${((event.clientX - bounds.left) / bounds.width) * 100}%`);
+                event.currentTarget.style.setProperty("--pointer-y", `${((event.clientY - bounds.top) / bounds.height) * 100}%`);
+              }}
+              onPointerLeave={(event) => {
+                event.currentTarget.style.removeProperty("--pointer-x");
+                event.currentTarget.style.removeProperty("--pointer-y");
+              }}
+            >Single-Click</em> Add-in</h1>
+            <div className="hero-contact-actions">
+              <a className="bottleneck-cta" href="#contact" onClick={(event) => smoothScrollTo(event, "contact")}>
+                Let us discuss your <strong>bottleneck</strong>
+                <ArrowUpRight size={16} aria-hidden="true" />
+              </a>
+              <a className="hero-whatsapp-link" href="https://wa.me/923462116322" target="_blank" rel="noreferrer" aria-label="Chat on WhatsApp" title="WhatsApp">
+                <MessageCircle size={16} aria-hidden="true" />
+              </a>
             </div>
+            <p className="hero-subhead">Helpful Dashboards, One-Click Add-Ins, Document Automation</p>
+            <p className="hero-description">I identify workflow bottlenecks, automate the slow parts, and replace fragile processes with better, scalable alternatives.</p>
           </div>
           <div className="profile-visual">
             <div className="profile-photo-frame">
@@ -623,7 +729,11 @@ export default function Home({ theme, toggleTheme }: HomeProps) {
 
         <GlobalReachSection />
 
+        <WorldDominationMap />
+
         <ServicesSection />
+
+        <ApproachSection onOpenVisual={() => setSelectedArchitecture(true)} />
 
         <ReviewGallery onOpen={setSelectedReview} />
 
@@ -633,7 +743,7 @@ export default function Home({ theme, toggleTheme }: HomeProps) {
             <p>Enterprise-minded Office automation that turns messy inputs into consistent, measurable output.</p>
           </div>
           <div className="project-grid">
-            {projects.map((project) => <ProjectCard key={project.number} project={project} />)}
+            {projects.map((project) => <ProjectCard key={project.number} project={project} onOpen={setSelectedProject} />)}
           </div>
         </section>
 
@@ -646,7 +756,8 @@ export default function Home({ theme, toggleTheme }: HomeProps) {
           <div className="form-card">
             {submitted ? <div className="success-state"><span className="success-icon"><Check size={22} /></span><h3>Message received.</h3><p>Thanks — you will be contacted shortly with possible options and a practical solution.</p><button className="text-link" type="button" onClick={() => setSubmitted(false)}>Send another message <ArrowUpRight size={16} /></button></div> : <form onSubmit={handleSubmit}>
               <input type="hidden" name="_subject" value="New portfolio project inquiry" /><input type="hidden" name="_template" value="table" /><input type="hidden" name="_captcha" value="false" />
-              <div className="form-row"><label>Name<input name="name" type="text" placeholder="Your name" required /></label><label>Email<input name="email" type="email" placeholder="you@company.com" required aria-invalid={Boolean(emailError)} onBlur={(event) => setEmailError(validateEmail(event.target.value))} onChange={(event) => setEmailError(validateEmail(event.target.value))} />{emailError && <span className="field-error" role="alert">{emailError}</span>}</label></div>
+              {emailError && <p className="field-error-summary" id="email-error" role="alert">{emailError}</p>}
+              <div className="form-row"><label>Name<input name="name" type="text" placeholder="Your name" required /></label><label>Email<input name="email" type="email" placeholder="you@company.com" required aria-invalid={Boolean(emailError)} aria-describedby={emailError ? "email-error" : undefined} onBlur={(event) => setEmailError(validateEmail(event.target.value))} onChange={(event) => setEmailError(validateEmail(event.target.value))} /></label></div>
               <label>Service needed<select name="serviceNeeded" defaultValue="" required><option value="" disabled>Select a service</option><option>Custom Excel / VSTO Add-in</option><option>MS Word Macro</option><option>Business Dashboard</option><option>Fillable PDF / Other</option></select></label>
               <label>Project description & timeline<textarea name="description" rows={5} placeholder="What needs automating, and when would you like it ready?" required /></label>
               <button className="button button-primary form-submit" type="submit" disabled={submitting}>{submitting ? <><span className="submit-spinner" aria-hidden="true" /> Sending…</> : <>Send project brief <ArrowUpRight size={18} /></>}</button>
@@ -660,11 +771,11 @@ export default function Home({ theme, toggleTheme }: HomeProps) {
         <div className="floating-actions" aria-label="Quick navigation and contact actions">
           {!isContactSectionVisible && (
             <>
-              <a className="floating-action floating-whatsapp" href="https://wa.me/923462116322" target="_blank" rel="noreferrer"><MessageCircle size={18} /><span>WhatsApp</span></a>
-              <a className="floating-action floating-project" href="#contact" onClick={(event) => smoothScrollTo(event, "contact")}><Sparkles size={17} /><span>Start a project</span></a>
+              <a className="floating-action floating-whatsapp" href="https://wa.me/923462116322" target="_blank" rel="noreferrer" aria-label="WhatsApp" title="WhatsApp"><MessageCircle size={15} aria-hidden="true" /><span>WhatsApp</span></a>
+              <a className="floating-action floating-project" href="#contact" onClick={(event) => smoothScrollTo(event, "contact")} aria-label="Start a project" title="Start a project"><Sparkles size={14} aria-hidden="true" /><span>Start a project</span></a>
             </>
           )}
-          <button className="floating-action floating-top" type="button" aria-label="Back to top" onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}><ChevronUp size={19} /></button>
+          <button className="floating-action floating-top" type="button" aria-label="Back to top" title="Back to top" onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}><ChevronUp size={15} aria-hidden="true" /><span>Back to top</span></button>
         </div>
       )}
 
@@ -674,6 +785,52 @@ export default function Home({ theme, toggleTheme }: HomeProps) {
             <div className="lightbox-toolbar"><span>Fiverr review · {selectedReview.name}</span><button type="button" className="lightbox-close" aria-label="Close review" onClick={() => setSelectedReview(null)}><X size={22} /></button></div>
             <div className="lightbox-image-wrap"><img src={selectedReview.src} alt={`Full Fiverr review from ${selectedReview.name}`} /></div>
             <p className="lightbox-hint">Click outside or press Esc to close</p>
+          </div>
+        </div>
+      )}
+
+      {selectedProject && (
+        <div className="review-lightbox project-lightbox" role="dialog" aria-modal="true" aria-label={`Full preview: ${selectedProject.title}`} onClick={() => setSelectedProject(null)}>
+          <div className="lightbox-panel project-lightbox-panel" onClick={(event) => event.stopPropagation()}>
+            <div className="lightbox-toolbar">
+              <div className="project-lightbox-header-info">
+                <span className="project-lightbox-eyebrow">{selectedProject.eyebrow}</span>
+                <span>{selectedProject.title}</span>
+              </div>
+              <button type="button" className="lightbox-close" aria-label="Close project preview" onClick={() => setSelectedProject(null)}><X size={22} /></button>
+            </div>
+            <div className="lightbox-image-wrap project-lightbox-image-wrap">
+              <img src={selectedProject.image} alt={selectedProject.alt} />
+            </div>
+            <div className="project-lightbox-footer">
+              <div className="project-lightbox-meta">
+                <span className="project-lightbox-badge">{selectedProject.badge}</span>
+                <span className="project-lightbox-file">File: <code>{selectedProject.label}</code></span>
+                <span className="project-lightbox-proc">Procedure: <code>{selectedProject.code}</code></span>
+              </div>
+              <p className="project-lightbox-impact">
+                <strong>Measured Impact:</strong> {selectedProject.impact}
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {selectedArchitecture && (
+        <div className="review-lightbox" role="dialog" aria-modal="true" aria-label="Full resolution workflow architecture diagram" onClick={() => setSelectedArchitecture(false)}>
+          <div className="lightbox-panel project-lightbox-panel" onClick={(event) => event.stopPropagation()}>
+            <div className="lightbox-toolbar">
+              <span>End-to-End Office Workflow Automation Architecture</span>
+              <button type="button" className="lightbox-close" aria-label="Close architecture preview" onClick={() => setSelectedArchitecture(false)}><X size={22} /></button>
+            </div>
+            <div className="lightbox-image-wrap project-lightbox-image-wrap">
+              <img src={workflowSystemImage} alt="Complete end-to-end office workflow automation architecture diagram by Muhammad Bilal" />
+            </div>
+            <div className="project-lightbox-footer">
+              <p className="project-lightbox-impact">
+                <strong>System Pipeline:</strong> Raw spreadsheets & QuickBooks API &rarr; Defensive C# VSTO & Power Query ETL &rarr; Single-click Ribbon add-ins & automated PDF publishing.
+              </p>
+            </div>
           </div>
         </div>
       )}
