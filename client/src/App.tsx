@@ -2,6 +2,7 @@ import { useEffect, useLayoutEffect, useState } from "react";
 import { Route, Switch } from "wouter";
 import ErrorBoundary from "./components/ErrorBoundary";
 import Home from "./pages/Home";
+import NotFound from "./pages/NotFound";
 
 type Theme = "light" | "dark" | "warm" | "cool";
 type ThemeContextValue = { theme: Theme; toggleTheme: () => void };
@@ -59,7 +60,7 @@ function Router({ theme, toggleTheme }: ThemeContextValue) {
         <Home theme={theme} toggleTheme={toggleTheme} />
       </Route>
       <Route>
-        <Home theme={theme} toggleTheme={toggleTheme} />
+        <NotFound />
       </Route>
     </Switch>
   );
@@ -74,6 +75,3 @@ export default function App() {
     </ErrorBoundary>
   );
 }
-
-// Note: This portfolio is intentionally client-only. Connect the contact submit
-// handler in Home.tsx to Formspree, Resend, or your own API when ready.

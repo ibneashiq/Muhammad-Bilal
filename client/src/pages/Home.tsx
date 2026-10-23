@@ -31,6 +31,7 @@ import {
 } from "lucide-react";
 import { FormEvent, MouseEvent, useEffect, useRef, useState } from "react";
 import { WorldDominationMap } from "../components/WorldDominationMap";
+import { CONTACT_INFO } from "../const";
 import serviceDashboardImage from "../assets/service-financial-dashboards.jpg";
 import serviceAddinImage from "../assets/service-excel-addins.jpg";
 import serviceDocAutomationImage from "../assets/service-document-automation.jpg";
@@ -39,8 +40,6 @@ import projectBarcodeImage from "../assets/project-barcode-merge.jpg";
 import projectWordAddinImage from "../assets/project-word-addin.jpg";
 import projectFinanceImage from "../assets/project-finance-pipeline.jpg";
 import workflowSystemImage from "../assets/workflow-pipeline-system.jpg";
-import globalReachGif from "../assets/global-reach.gif";
-import globalReachPoster from "../assets/global-reach-poster.jpg";
 import upworkLogo from "../assets/upwork-icon.svg";
 import fiverrLogo from "../assets/fiverr-icon.jpg";
 
@@ -120,7 +119,7 @@ const projects = [
     label: "ExecutiveFinancialAnalytics_BI.xlsx",
     code: "ReconcileQuickBooksLedger()",
     badge: "AUTOMATED RECONCILIATION",
-    review: "Thank you very much Muhammad.",
+    review: "Thank you very much Muhammad. Excellent financial automation work.",
     reviewer: "Upwork client · 5.0/5 review",
   },
 ];
@@ -300,23 +299,6 @@ function FeaturedClients() {
   );
 }
 
-function GlobalReachSection() {
-  return (
-    <section className="global-reach section-wrap" id="global-reach" aria-labelledby="global-reach-heading">
-      <div className="global-reach-heading">
-        <p className="section-index">Worldwide reach</p>
-        <h2 id="global-reach-heading">Trusted beyond<br /><em>borders.</em></h2>
-      </div>
-      <figure className="global-reach-visual" aria-hidden="true">
-        <picture>
-          <source media="(prefers-reduced-motion: reduce)" srcSet={globalReachPoster} />
-          <img className="global-reach-map" src={globalReachGif} alt="" loading="lazy" decoding="async" />
-        </picture>
-      </figure>
-    </section>
-  );
-}
-
 function ApproachSection({ onOpenVisual }: { onOpenVisual: () => void }) {
   return (
     <section className="approach-section" id="approach" aria-labelledby="approach-heading">
@@ -452,27 +434,47 @@ function ServicesSection() {
   const trackRef = useRef<HTMLDivElement>(null);
   const frameRef = useRef<number | undefined>(undefined);
 
-  return <section className="services-section section-wrap" id="services">
-    <div className="services-intro">
-      <div className="services-copy">
-        <div className="section-heading"><div><h2>Office work,<br /><em>made operational.</em></h2></div></div>
-        <p>Specialist automation for teams that need fewer handoffs, cleaner data, and reliable output inside the tools they already use.</p>
-      </div>
-    </div>
-    <div className="services-carousel">
-      <button className="client-carousel-control services-carousel-control-prev" type="button" aria-label="Show previous service" title="Previous service" onClick={() => advanceCarousel(trackRef.current, viewportRef.current, "reverse", frameRef)}>
-        <ChevronLeft size={19} aria-hidden="true" />
-      </button>
-      <div className="services-carousel-viewport" aria-label="Services" ref={viewportRef}>
-        <div className="services-grid" ref={trackRef}>
-          {services.map((service) => { const Icon = icons[service.icon as keyof typeof icons]; const illustration = serviceIllustrations[service.number]; return <article className="service-card" key={service.number}><div className="service-top"><Icon size={22} /></div><h3>{service.title}</h3>{illustration && <img className="service-illustration" src={illustration.src} alt={illustration.alt} />}<p>{service.description}</p><div className="tag-list">{service.tags.map((tag) => <span key={tag}>{tag}</span>)}</div></article>; })}
+  return (
+    <section className="services-section section-wrap" id="services">
+      <div className="services-intro">
+        <div className="services-copy">
+          <div className="section-heading">
+            <div>
+              <h2>Office work,<br /><em>made operational.</em></h2>
+            </div>
+          </div>
+          <p>Specialist automation for teams that need fewer handoffs, cleaner data, and reliable output inside the tools they already use.</p>
         </div>
       </div>
-      <button className="client-carousel-control services-carousel-control-next" type="button" aria-label="Show next service" title="Next service" onClick={() => advanceCarousel(trackRef.current, viewportRef.current, "normal", frameRef)}>
-        <ChevronRight size={19} aria-hidden="true" />
-      </button>
-    </div>
-  </section>;
+      <div className="services-carousel">
+        <button className="client-carousel-control services-carousel-control-prev" type="button" aria-label="Show previous service" title="Previous service" onClick={() => advanceCarousel(trackRef.current, viewportRef.current, "reverse", frameRef)}>
+          <ChevronLeft size={19} aria-hidden="true" />
+        </button>
+        <div className="services-carousel-viewport" aria-label="Services" ref={viewportRef}>
+          <div className="services-grid" ref={trackRef}>
+            {services.map((service) => {
+              const Icon = icons[service.icon as keyof typeof icons];
+              const illustration = serviceIllustrations[service.number];
+              return (
+                <article className="service-card" key={service.number}>
+                  <div className="service-top"><Icon size={22} /></div>
+                  <h3>{service.title}</h3>
+                  {illustration && <img className="service-illustration" src={illustration.src} alt={illustration.alt} />}
+                  <p>{service.description}</p>
+                  <div className="tag-list">
+                    {service.tags.map((tag) => <span key={tag}>{tag}</span>)}
+                  </div>
+                </article>
+              );
+            })}
+          </div>
+        </div>
+        <button className="client-carousel-control services-carousel-control-next" type="button" aria-label="Show next service" title="Next service" onClick={() => advanceCarousel(trackRef.current, viewportRef.current, "normal", frameRef)}>
+          <ChevronRight size={19} aria-hidden="true" />
+        </button>
+      </div>
+    </section>
+  );
 }
 
 function ReviewGallery({ onOpen }: { onOpen: (review: ReviewScreenshot) => void }) {
@@ -583,6 +585,13 @@ export default function Home({ theme, toggleTheme }: HomeProps) {
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const form = event.currentTarget;
+    const honey = (form.elements.namedItem("_honey") as HTMLInputElement)?.value;
+    if (honey) {
+      // Honeypot field filled by bot — silently pretend success
+      setSubmitted(true);
+      return;
+    }
+
     const email = form.elements.namedItem("email") as HTMLInputElement;
     const error = validateEmail(email.value);
     setEmailError(error);
@@ -594,9 +603,7 @@ export default function Home({ theme, toggleTheme }: HomeProps) {
 
     setSubmitting(true);
     try {
-      // FORM HANDOFF: AJAX keeps the visitor on this portfolio page while
-      // FormSubmit delivers the form fields to ibn.e.ashiq@gmail.com.
-      const response = await fetch("https://formsubmit.co/ajax/26a7b879632aba3a587ed210be5296c0", {
+      const response = await fetch(CONTACT_INFO.formSubmitEndpoint, {
         method: "POST",
         headers: { Accept: "application/json" },
         body: new FormData(form),
@@ -605,7 +612,7 @@ export default function Home({ theme, toggleTheme }: HomeProps) {
       setSubmitted(true);
       form.reset();
     } catch {
-      setSubmitError("The form could not send right now. Please continue on WhatsApp.");
+      setSubmitError("The form could not send right now. Please continue directly on WhatsApp.");
     } finally {
       setSubmitting(false);
     }
@@ -613,11 +620,11 @@ export default function Home({ theme, toggleTheme }: HomeProps) {
 
   const copyEmail = async () => {
     try {
-      await navigator.clipboard.writeText("ibn.e.ashiq@gmail.com");
+      await navigator.clipboard.writeText(CONTACT_INFO.email);
       setCopiedEmail(true);
       window.setTimeout(() => setCopiedEmail(false), 1800);
     } catch {
-      setSubmitError("Copy is unavailable here. Please email ibn.e.ashiq@gmail.com directly.");
+      setSubmitError(`Copy is unavailable here. Please email ${CONTACT_INFO.email} directly.`);
     }
   };
 
@@ -669,6 +676,7 @@ export default function Home({ theme, toggleTheme }: HomeProps) {
         </button>
         <nav className={`site-nav ${menuOpen ? "is-open" : ""}`} aria-label="Main navigation">
           <a href="#featured-clients" onClick={(event) => smoothScrollTo(event, "featured-clients")}>Clients</a>
+          <a href="#global-reach" onClick={(event) => smoothScrollTo(event, "global-reach")}>Global Reach</a>
           <a href="#services" onClick={(event) => smoothScrollTo(event, "services")}>Services</a>
           <a href="#approach" onClick={(event) => smoothScrollTo(event, "approach")}>Architecture</a>
           <a href="#reviews" onClick={(event) => smoothScrollTo(event, "reviews")}>Reviews</a>
@@ -703,7 +711,7 @@ export default function Home({ theme, toggleTheme }: HomeProps) {
                 Let us discuss your <strong>bottleneck</strong>
                 <ArrowUpRight size={16} aria-hidden="true" />
               </a>
-              <a className="hero-whatsapp-link" href="https://wa.me/923462116322" target="_blank" rel="noreferrer" aria-label="Chat on WhatsApp" title="WhatsApp">
+              <a className="hero-whatsapp-link" href={CONTACT_INFO.whatsappUrl} target="_blank" rel="noreferrer" aria-label="Chat on WhatsApp" title="WhatsApp">
                 <MessageCircle size={16} aria-hidden="true" />
               </a>
             </div>
@@ -727,8 +735,6 @@ export default function Home({ theme, toggleTheme }: HomeProps) {
 
         <FeaturedClients />
 
-        <GlobalReachSection />
-
         <WorldDominationMap />
 
         <ServicesSection />
@@ -748,21 +754,107 @@ export default function Home({ theme, toggleTheme }: HomeProps) {
         </section>
 
         <section className="contact-section section-wrap" id="contact" ref={contactSectionRef}>
-          <div className="contact-intro"><h2>Have a workflow<br /><em>worth fixing?</em></h2><p>Share the process, tools, and timeline. I will come back with a practical route to a faster, more accurate workflow.</p><div className="quick-connect" aria-label="Quick connect options">
-              <div className="email-connect"><span className="channel-logo channel-gmail"><Mail size={16} /></span><span className="email-copy"><strong>Direct Email</strong><small>ibn.e.ashiq@gmail.com</small></span><a className="email-open" href="mailto:ibn.e.ashiq@gmail.com">Email <ArrowUpRight size={13} /></a><button type="button" className="copy-email" onClick={copyEmail}>{copiedEmail ? <><Check size={14} /> Copied</> : <><Clipboard size={14} /> Copy</>}</button></div>
-              <a className="contact-channel whatsapp-contact" href="https://wa.me/923462116322" target="_blank" rel="noreferrer"><span className="channel-logo channel-whatsapp"><MessageCircle size={16} /></span><span><strong>WhatsApp me</strong><small>+92 346 2116322 · fastest reply</small></span><ArrowUpRight size={15} /></a>
-              <div className="contact-marketplace-row"><a className="contact-channel" href="https://upwork.com/freelancers/muhammadbilal88" target="_blank" rel="noreferrer"><span className="channel-logo channel-upwork"><span className="upwork-icon-wrap"><img className="marketplace-icon upwork-icon" src={upworkLogo} alt="" /></span></span><span><strong>Upwork</strong><small>Direct hire</small></span><ArrowUpRight size={15} /></a><a className="contact-channel" href="https://www.fiverr.com/s/d0DyPYZ" target="_blank" rel="noreferrer"><span className="channel-logo channel-fiverr"><img className="marketplace-icon fiverr-icon" src={fiverrLogo} alt="" /></span><span><strong>Fiverr</strong><small>Direct order</small></span><ArrowUpRight size={15} /></a></div>
-            </div></div>
+          <div className="contact-intro">
+            <h2>Have a workflow<br /><em>worth fixing?</em></h2>
+            <p>Share the process, tools, and timeline. I will come back with a practical route to a faster, more accurate workflow.</p>
+            <div className="quick-connect" aria-label="Quick connect options">
+              <div className="email-connect">
+                <span className="channel-logo channel-gmail"><Mail size={16} /></span>
+                <span className="email-copy"><strong>Direct Email</strong><small>{CONTACT_INFO.email}</small></span>
+                <a className="email-open" href={`mailto:${CONTACT_INFO.email}`}>Email <ArrowUpRight size={13} /></a>
+                <button type="button" className="copy-email" onClick={copyEmail}>{copiedEmail ? <><Check size={14} /> Copied</> : <><Clipboard size={14} /> Copy</>}</button>
+              </div>
+              <a className="contact-channel whatsapp-contact" href={CONTACT_INFO.whatsappUrl} target="_blank" rel="noreferrer">
+                <span className="channel-logo channel-whatsapp"><MessageCircle size={16} /></span>
+                <span><strong>WhatsApp me</strong><small>{CONTACT_INFO.whatsappDisplay} · fastest reply</small></span>
+                <ArrowUpRight size={15} />
+              </a>
+              <div className="contact-marketplace-row">
+                <a className="contact-channel" href={CONTACT_INFO.upworkUrl} target="_blank" rel="noreferrer">
+                  <span className="channel-logo channel-upwork"><span className="upwork-icon-wrap"><img className="marketplace-icon upwork-icon" src={upworkLogo} alt="" /></span></span>
+                  <span><strong>Upwork</strong><small>Direct hire</small></span>
+                  <ArrowUpRight size={15} />
+                </a>
+                <a className="contact-channel" href={CONTACT_INFO.fiverrUrl} target="_blank" rel="noreferrer">
+                  <span className="channel-logo channel-fiverr"><img className="marketplace-icon fiverr-icon" src={fiverrLogo} alt="" /></span>
+                  <span><strong>Fiverr</strong><small>Direct order</small></span>
+                  <ArrowUpRight size={15} />
+                </a>
+              </div>
+            </div>
+          </div>
           <div className="form-card">
-            {submitted ? <div className="success-state"><span className="success-icon"><Check size={22} /></span><h3>Message received.</h3><p>Thanks — you will be contacted shortly with possible options and a practical solution.</p><button className="text-link" type="button" onClick={() => setSubmitted(false)}>Send another message <ArrowUpRight size={16} /></button></div> : <form onSubmit={handleSubmit}>
-              <input type="hidden" name="_subject" value="New portfolio project inquiry" /><input type="hidden" name="_template" value="table" /><input type="hidden" name="_captcha" value="false" />
-              {emailError && <p className="field-error-summary" id="email-error" role="alert">{emailError}</p>}
-              <div className="form-row"><label>Name<input name="name" type="text" placeholder="Your name" required /></label><label>Email<input name="email" type="email" placeholder="you@company.com" required aria-invalid={Boolean(emailError)} aria-describedby={emailError ? "email-error" : undefined} onBlur={(event) => setEmailError(validateEmail(event.target.value))} onChange={(event) => setEmailError(validateEmail(event.target.value))} /></label></div>
-              <label>Service needed<select name="serviceNeeded" defaultValue="" required><option value="" disabled>Select a service</option><option>Custom Excel / VSTO Add-in</option><option>MS Word Macro</option><option>Business Dashboard</option><option>Fillable PDF / Other</option></select></label>
-              <label>Project description & timeline<textarea name="description" rows={5} placeholder="What needs automating, and when would you like it ready?" required /></label>
-              <button className="button button-primary form-submit" type="submit" disabled={submitting}>{submitting ? <><span className="submit-spinner" aria-hidden="true" /> Sending…</> : <>Send project brief <ArrowUpRight size={18} /></>}</button>
-              <p className="form-note">Expect a response and initial project scope within 24 hours.</p>{submitError && <p className="form-error" role="alert">{submitError} <a href="https://wa.me/923462116322" target="_blank" rel="noreferrer">Open WhatsApp</a></p>}
-            </form>}
+            {submitted ? (
+              <div className="success-state">
+                <span className="success-icon"><Check size={22} /></span>
+                <h3>Message received.</h3>
+                <p>Thanks — you will be contacted shortly with possible options and a practical solution.</p>
+                <button className="text-link" type="button" onClick={() => setSubmitted(false)}>Send another message <ArrowUpRight size={16} /></button>
+              </div>
+            ) : (
+              <form onSubmit={handleSubmit}>
+                <input type="hidden" name="_subject" value="New portfolio project inquiry" />
+                <input type="hidden" name="_template" value="table" />
+                <input type="hidden" name="_captcha" value="false" />
+                {/* Honeypot field for bot spam prevention */}
+                <input type="text" name="_honey" style={{ display: "none" }} tabIndex={-1} autoComplete="off" />
+                
+                {emailError && <p className="field-error-summary" id="email-error" role="alert">{emailError}</p>}
+                
+                <div className="form-row">
+                  <label htmlFor="contact-name">
+                    Name
+                    <input id="contact-name" name="name" type="text" placeholder="Your name" required />
+                  </label>
+                  <label htmlFor="contact-email">
+                    Email
+                    <input
+                      id="contact-email"
+                      name="email"
+                      type="email"
+                      placeholder="you@company.com"
+                      required
+                      aria-invalid={Boolean(emailError)}
+                      aria-describedby={emailError ? "email-error" : undefined}
+                      onBlur={(event) => setEmailError(validateEmail(event.target.value))}
+                      onChange={(event) => setEmailError(validateEmail(event.target.value))}
+                    />
+                  </label>
+                </div>
+                
+                <label htmlFor="contact-service">
+                  Service needed
+                  <select id="contact-service" name="serviceNeeded" defaultValue="" required>
+                    <option value="" disabled>Select a service</option>
+                    <option>Custom Excel / VSTO Add-in</option>
+                    <option>MS Word Macro</option>
+                    <option>Business Dashboard</option>
+                    <option>Fillable PDF / Other</option>
+                  </select>
+                </label>
+                
+                <label htmlFor="contact-description">
+                  Project description & timeline
+                  <textarea
+                    id="contact-description"
+                    name="description"
+                    rows={5}
+                    placeholder="What needs automating, and when would you like it ready?"
+                    required
+                  />
+                </label>
+                
+                <button className="button button-primary form-submit" type="submit" disabled={submitting}>
+                  {submitting ? <><span className="submit-spinner" aria-hidden="true" /> Sending…</> : <>Send project brief <ArrowUpRight size={18} /></>}
+                </button>
+                <p className="form-note">Expect a response and initial project scope within 24 hours.</p>
+                {submitError && (
+                  <p className="form-error" role="alert">
+                    {submitError} <a href={CONTACT_INFO.whatsappUrl} target="_blank" rel="noreferrer">Open WhatsApp</a>
+                  </p>
+                )}
+              </form>
+            )}
           </div>
         </section>
       </main>
@@ -771,8 +863,8 @@ export default function Home({ theme, toggleTheme }: HomeProps) {
         <div className="floating-actions" aria-label="Quick navigation and contact actions">
           {!isContactSectionVisible && (
             <>
-              <a className="floating-action floating-whatsapp" href="https://wa.me/923462116322" target="_blank" rel="noreferrer" aria-label="WhatsApp" title="WhatsApp"><MessageCircle size={15} aria-hidden="true" /><span>WhatsApp</span></a>
               <a className="floating-action floating-project" href="#contact" onClick={(event) => smoothScrollTo(event, "contact")} aria-label="Start a project" title="Start a project"><Sparkles size={14} aria-hidden="true" /><span>Start a project</span></a>
+              <a className="floating-action floating-whatsapp" href={CONTACT_INFO.whatsappUrl} target="_blank" rel="noreferrer" aria-label="WhatsApp" title="WhatsApp"><MessageCircle size={15} aria-hidden="true" /><span>WhatsApp</span></a>
             </>
           )}
           <button className="floating-action floating-top" type="button" aria-label="Back to top" title="Back to top" onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}><ChevronUp size={15} aria-hidden="true" /><span>Back to top</span></button>
@@ -835,15 +927,19 @@ export default function Home({ theme, toggleTheme }: HomeProps) {
         </div>
       )}
 
-      <footer className="site-footer section-wrap"><div className="footer-brand"><span className="brand-initial">MB</span><span>© 2026 Muhammad Bilal</span></div><span className="footer-note">Excel, Office, and workflow systems that give good work room to breathe.</span><div className="footer-links" aria-label="Social and contact links">
-        <a href="mailto:ibn.e.ashiq@gmail.com" aria-label="Email Muhammad Bilal"><Mail size={17} /></a>
-        <a href="https://www.facebook.com/ibn.ashiq/" target="_blank" rel="noreferrer" aria-label="Facebook"><span className="social-letter">f</span></a>
-        <a href="https://www.instagram.com/ibn.e.ashiq/" target="_blank" rel="noreferrer" aria-label="Instagram"><Instagram size={17} /></a>
-        <a href="https://www.linkedin.com/in/bilalashiq/" target="_blank" rel="noreferrer" aria-label="LinkedIn"><Linkedin size={17} /></a>
-        <a href="https://www.youtube.com/@VBAbyMBA" target="_blank" rel="noreferrer" aria-label="YouTube"><Youtube size={17} /></a>
-        <a href="https://github.com/ibneashiq" target="_blank" rel="noreferrer" aria-label="GitHub"><Github size={17} /></a>
-        <a href="https://wa.me/923462116322" target="_blank" rel="noreferrer" aria-label="WhatsApp"><MessageCircle size={17} /></a>
-      </div></footer>
+      <footer className="site-footer section-wrap">
+        <div className="footer-brand"><span className="brand-initial">MB</span><span>© 2026 Muhammad Bilal</span></div>
+        <span className="footer-note">Excel, Office, and workflow systems that give good work room to breathe.</span>
+        <div className="footer-links" aria-label="Social and contact links">
+          <a href={`mailto:${CONTACT_INFO.email}`} aria-label="Email Muhammad Bilal"><Mail size={17} /></a>
+          <a href={CONTACT_INFO.facebookUrl} target="_blank" rel="noreferrer" aria-label="Facebook"><span className="social-letter">f</span></a>
+          <a href={CONTACT_INFO.instagramUrl} target="_blank" rel="noreferrer" aria-label="Instagram"><Instagram size={17} /></a>
+          <a href={CONTACT_INFO.linkedinUrl} target="_blank" rel="noreferrer" aria-label="LinkedIn"><Linkedin size={17} /></a>
+          <a href={CONTACT_INFO.youtubeUrl} target="_blank" rel="noreferrer" aria-label="YouTube"><Youtube size={17} /></a>
+          <a href={CONTACT_INFO.githubUrl} target="_blank" rel="noreferrer" aria-label="GitHub"><Github size={17} /></a>
+          <a href={CONTACT_INFO.whatsappUrl} target="_blank" rel="noreferrer" aria-label="WhatsApp"><MessageCircle size={17} /></a>
+        </div>
+      </footer>
     </div>
   );
 }

@@ -1,17 +1,15 @@
-export { COOKIE_NAME, ONE_YEAR_MS } from "@shared/const";
-
-// Generate login URL at runtime so redirect URI reflects the current origin.
-export const getLoginUrl = () => {
-  const oauthPortalUrl = import.meta.env.VITE_OAUTH_PORTAL_URL;
-  const appId = import.meta.env.VITE_APP_ID;
-  const redirectUri = `${window.location.origin}/api/oauth/callback`;
-  const state = btoa(redirectUri);
-
-  const url = new URL(`${oauthPortalUrl}/app-auth`);
-  url.searchParams.set("appId", appId);
-  url.searchParams.set("redirectUri", redirectUri);
-  url.searchParams.set("state", state);
-  url.searchParams.set("type", "signIn");
-
-  return url.toString();
-};
+export const CONTACT_INFO = {
+  name: "Muhammad Bilal",
+  email: "ibn.e.ashiq@gmail.com",
+  whatsappNumber: "923462116322",
+  whatsappDisplay: "+92 346 2116322",
+  whatsappUrl: "https://wa.me/923462116322",
+  upworkUrl: "https://upwork.com/freelancers/muhammadbilal88",
+  fiverrUrl: "https://www.fiverr.com/s/d0DyPYZ",
+  linkedinUrl: "https://www.linkedin.com/in/bilalashiq/",
+  githubUrl: "https://github.com/ibneashiq",
+  youtubeUrl: "https://www.youtube.com/@VBAbyMBA",
+  facebookUrl: "https://www.facebook.com/ibn.ashiq/",
+  instagramUrl: "https://www.instagram.com/ibn.e.ashiq/",
+  formSubmitEndpoint: "https://formsubmit.co/ajax/26a7b879632aba3a587ed210be5296c0",
+} as const;
